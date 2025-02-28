@@ -101,7 +101,6 @@ def execute(ast):
         graph_name = ast[1]
         visualize_animated(graph_name)
 
-    
     if graph_name in graph_store:
         graph = graph_store[graph_name]
 
@@ -170,12 +169,9 @@ def visualize_animated(graph_name):
         ax.set_title(f"Step {i+1}: Adding edge {edges[i][0]} -> {edges[i][1]}")
 
     ani = animation.FuncAnimation(fig, update, frames=len(edges), interval=100, repeat=False)
-    plt.show()  # Nu kører animationen uden blokering
-
-
-    plt.ioff()  # 🔥 Slå interaktiv tilstand fra, når animationen er færdig
-    #plt.show()  # Afslut med en endelig visualisering
-
+    
+    plt.show()
+    plt.ioff()  # Slå interaktiv tilstand fra, når animationen er færdig
 
 def run_gml(code):
     lines = code.strip().split("\n")

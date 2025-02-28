@@ -1,4 +1,4 @@
-from lexer_module import lexer  # Sørg for, at vi bruger det rigtige modul
+from lexer_module import lexer 
 
 code = """
 graph G
