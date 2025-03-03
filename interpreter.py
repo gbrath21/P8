@@ -14,6 +14,9 @@ graph_store = {}
 node_colors = {}
 edge_colors = {}
 
+import networkx as nx
+import pickle 
+
 def execute(ast):
     if ast is None:
         return
@@ -24,6 +27,11 @@ def execute(ast):
         graph_name = ast[1]
         graph_store[graph_name] = nx.Graph()
         print(f"Created graph: {graph_name}")
+
+    elif command == 'directed_graph':
+        graph_name = ast[1]
+        graph_store[graph_name] = nx.DiGraph()  # Brug en rettet graf
+        print(f"Created directed graph: {graph_name}")
 
     elif command == 'node':
         node_name = ast[1]
@@ -58,7 +66,7 @@ def execute(ast):
             print(f"Deleted node {node_name} from graph {graph_name}")
             print(f"Remaining nodes after deletion: {list(graph_store[graph_name].nodes())}")
         else:
-            print(f" Error: Node {node_name} does not exist in {graph_name}")
+            print(f"Error: Node {node_name} does not exist in {graph_name}")
 
     elif command == 'delete_edge':
         node1, node2, graph_name = ast[1], ast[2], ast[3]
@@ -68,22 +76,38 @@ def execute(ast):
             print(f"Remaining edges after deletion: {list(graph_store[graph_name].edges())}")
         else:
             print(f"Error: Edge {node1} -> {node2} does not exist in {graph_name}")
-            
-    elif command == 'directed_graph':
-        graph_name = ast[1]
-        graph_store[graph_name] = nx.DiGraph()  # Brug en rettet graf
-        print(f"Created directed graph: {graph_name}")
 
+    if command == 'save_graph':
+        graph_name = ast[1]
+        filename = ast[2]
+
+        if graph_name in graph_store:
+            with open(filename, "wb") as f:
+                pickle.dump(graph_store[graph_name], f)
+            print(f"Saved graph {graph_name} to {filename}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
+
+    elif command == 'load_graph':
+        new_graph_name = ast[1]
+        filename = ast[2]
+
+        try:
+            with open(filename, "rb") as f:
+                graph_store[new_graph_name] = pickle.load(f)
+            print(f"Loaded graph from {filename} as {new_graph_name}")
+        except FileNotFoundError:
+            print(f"Error: File {filename} not found")
+            
     elif command == 'visualize':
         graph_name = ast[1]
-        visualize_interactive(graph_name)
-
-import plotly.io as pio
-import webbrowser
-import os
+        if graph_name in graph_store:
+            visualize_interactive(graph_name)
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
 
 def visualize_interactive(graph_name):
-    """Vis den opdaterede graf interaktivt i Plotly."""
+    """Vis den opdaterede graf i Plotly."""
     if graph_name not in graph_store:
         print(f"Error: Graph {graph_name} does not exist")
         return
@@ -107,9 +131,19 @@ def visualize_interactive(graph_name):
         node_y.append(y)
         node_text.append(node)
 
-    edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=2, color='gray'), hoverinfo='none')
-    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers+text', text=node_text, textposition="top center",
-                            marker=dict(size=12, color='blue', line=dict(width=2)))
+    # Hvis grafen er directed, så vis pile på kanterne
+    is_directed = isinstance(graph, nx.DiGraph)
+    
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y, mode='lines', 
+        line=dict(width=2, color='gray'), hoverinfo='none'
+    )
+
+    node_trace = go.Scatter(
+        x=node_x, y=node_y, mode='markers+text',
+        text=node_text, textposition="top center",
+        marker=dict(size=12, color='blue', line=dict(width=2))
+    )
 
     fig = go.Figure(data=[edge_trace, node_trace])
     fig.update_layout(title=f"Visualization of Graph: {graph_name}", showlegend=False)
@@ -120,13 +154,24 @@ def visualize_interactive(graph_name):
         y_mid = (pos[u][1] + pos[v][1]) / 2
         fig.add_annotation(x=x_mid, y=y_mid, text=weight, showarrow=False, font=dict(color="red", size=14))
 
-    # Opret en filsti
+    # Hvis grafen er rettet, tilføj pile manuelt ved at bruge annotations
+    if is_directed:
+        for u, v in graph.edges():
+            x0, y0 = pos[u]
+            x1, y1 = pos[v]
+            fig.add_annotation(
+                ax=x0, ay=y0, x=x1, y=y1,
+                xref="x", yref="y", axref="x", ayref="y",
+                showarrow=True, arrowhead=2, arrowsize=2, arrowcolor="black"
+            )
+
+    # Opret en absolut filsti
     filename = os.path.abspath("graph_visualization.html")
     pio.write_html(fig, filename)
 
-    # Åben browser
+    # Åbn browseren
     try:
-        webbrowser.open(f"file://{filename}", new=2)
+        webbrowser.open(f"file://{filename}", new=2) 
         print(f"Graph visualization opened in browser: {filename}")
     except Exception as e:
         print(f"Could not open browser: {e}")

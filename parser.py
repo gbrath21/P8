@@ -12,7 +12,7 @@ def p_statement_node(p):
 
 def p_statement_edge(p):
     'statement : EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER'
-    p[0] = ('edge', p[2], p[4], p[6], 1)  # Standardvægt = 1, hvis ingen vægt er angivet
+    p[0] = ('edge', p[2], p[4], p[6], 1)
 
 def p_statement_visualize(p):
     'statement : VISUALIZE IDENTIFIER'
@@ -44,11 +44,20 @@ def p_statement_delete_edge(p):
 
 def p_statement_weighted_edge(p):
     'statement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER'
-    p[0] = ('edge', p[2], p[4], p[8], p[6])  # Vægt er p[6]
-
+    p[0] = ('edge', p[2], p[4], p[8], p[6])
+    
 def p_statement_directed_graph(p):
     'statement : GRAPH IDENTIFIER DIRECTED'
     p[0] = ('directed_graph', p[2])
+
+def p_statement_save_graph(p):
+    'statement : SAVE GRAPH IDENTIFIER TO STRING'
+    p[0] = ('save_graph', p[3], p[5].strip('"'))
+
+def p_statement_load_graph(p):
+    'statement : LOAD GRAPH IDENTIFIER FROM STRING'
+    p[0] = ('load_graph', p[3], p[5].strip('"'))
+
 
 def p_error(p):
     if p:

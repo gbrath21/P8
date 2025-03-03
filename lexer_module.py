@@ -4,7 +4,7 @@ import ply.lex as lex
 tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
-    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED'
+    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD'
 )
 
 # KEYWORDS
@@ -22,15 +22,16 @@ t_DELETE1 = r'delete1'
 t_FROM = r'from'
 t_WEIGHT = r'weight'
 t_DIRECTED = r'directed'
+t_SAVE = r'save'
+t_LOAD = r'load'
 
 # SYMBOLS
 t_ARROW = r'->'
-t_STRING = r'"[a-zA-Z_]+"'
+t_STRING = r'"[^"]*"'
 
-# IDENTIFIER - **SKAL DEFINERES SIDST**
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize', 'in', 'to', 'delete1', 'from', 'weight', 'directed'}:
+    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize', 'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load'}:
         t.type = t.value.upper()  # Konverter til token-type
     return t
 
