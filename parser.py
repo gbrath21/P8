@@ -58,19 +58,6 @@ def p_statement_delete_edge(p):
     'statement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER'
     p[0] = ('delete1_edge', p[3], p[5], p[7])
 
-def p_statement_visualize(p):
-    'statement : VISUALIZE graph_list'
-    p[0] = ('visualize', p[2])
-
-def p_graph_list_multiple(p):
-    'graph_list : IDENTIFIER graph_list'
-    p[0] = [p[1]] + p[2]
-
-def p_graph_list_single(p):
-    'graph_list : IDENTIFIER'
-    p[0] = [p[1]]
-
-
 # def p_statement_weighted_edge(p):
 #     'statement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER'
 #     p[0] = ('edge', p[2], p[4], p[8], p[6])
