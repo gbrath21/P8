@@ -6,6 +6,12 @@ node C in G
 edge B -> C weight 5 in G
 visualize G
 
+graph H directed 
+node A in H
+node B in H
+delete1 node B from H
+edge A -> B in H
+visualize H
 
 graph G
 node A in G

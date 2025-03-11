@@ -35,10 +35,15 @@ def execute(ast):
 
     elif command == 'edge':
         # ast: ('edge', node1, node2, graph_name, weight)
-        node1, node2, graph_name, weight = ast[1], ast[2], ast[3], int(ast[4]) if len(ast) > 4 else 1
+        node1, node2, graph_name, weight = ast[1], ast[2], ast[3], int(ast[4]) if len(ast) > 4 else 0
         if graph_name in graph_store:
-            graph_store[graph_name].add_edge(node1, node2, weight=weight)
-            print(f"Added edge {node1} -> {node2} (weight: {weight}) in graph {graph_name}")
+            graph = graph_store[graph_name]
+            print(f"Graph type: {type(graph)}")  # Debugging line
+            if node1 in graph and node2 in graph:
+                graph.add_edge(node1, node2, weight=weight)
+                print(f"Added edge {node1} -> {node2} (weight: {weight}) in graph {graph_name}")
+            else: 
+                print(f"Error: One or both nodes ({node1}, {node2}) do not exist in {graph_name}")
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
@@ -70,6 +75,23 @@ def execute(ast):
                     print(f"No path found between {node1} and {node2} in {graph_name}")
             else:
                 print(f"Error: One or both nodes do not exist in {graph_name}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
+            
+    elif command == 'delete1_node':
+        node_name, graph_name = ast[1], ast[2]
+    
+        if graph_name in graph_store:
+            graph = graph_store[graph_name]
+        
+            if node_name in graph:
+                print(f"Deleting node {node_name} from {graph_name}...")  # Debugging
+                graph.remove_node(node_name)
+                print(f"Node {node_name} deleted from {graph_name}.")
+                print(f"Remaining nodes: {list(graph.nodes())}")
+                print(f"Remaining edges: {list(graph.edges())}")
+            else:
+                print(f"Error: Node {node_name} does not exist in {graph_name}")
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
