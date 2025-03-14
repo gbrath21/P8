@@ -1,9 +1,30 @@
-graph G directed
+graph G
 node A in G
 node B in G
-edge A -> B weight 10 in G
 node C in G
+edge A -> B weight 10 in G
 edge B -> C weight 5 in G
+edge A -> C weight 5 in G
+visualize G
+
+graph G directed 
+node A in G
+node B in G 
+node C in G
+edge A -> B weight 10 in G 
+edge B -> C weight 5 in G 
+edge A -> C weight 5 in G
+find shortest path A to B in G
+visualize G
+
+graph G directed 
+node A in G
+node B in G 
+node C in G
+edge A -> B weight 10 in G 
+edge B -> C weight 5 in G 
+edge A -> C weight 5 in G
+find cycle in G
 visualize G
 
 graph H directed 

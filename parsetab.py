@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ARROW COLOR CYCLE DELETE1 DIRECTED EDGE FIND FROM GRAPH IDENTIFIER IN LOAD MST NODE NUMBER PATH SAVE SHORTEST STRING TO VISUALIZE WEIGHTstatement : NODE IDENTIFIER IN IDENTIFIERstatement : GRAPH IDENTIFIER DIRECTEDstatement : GRAPH IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIERstatement : VISUALIZE IDENTIFIERstatement : FIND CYCLE IN IDENTIFIERstatement : PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIERstatement : COLOR NODE IDENTIFIER STRINGstatement : COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRINGstatement : DELETE1 NODE IDENTIFIER FROM IDENTIFIERstatement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIERstatement : SAVE GRAPH IDENTIFIER TO STRINGstatement : LOAD GRAPH IDENTIFIER FROM STRINGstatement : FIND MST IN IDENTIFIER'
+_lr_signature = 'ARROW COLOR CYCLE DELETE1 DIRECTED EDGE FIND FROM GRAPH IDENTIFIER IN LOAD MST NODE NUMBER PATH SAVE SHORTEST STRING TO VISUALIZE WEIGHTstatement : NODE IDENTIFIER IN IDENTIFIERstatement : GRAPH IDENTIFIER DIRECTEDstatement : GRAPH IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIERstatement : VISUALIZE IDENTIFIERstatement : FIND CYCLE IN IDENTIFIERstatement : PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIERstatement : COLOR NODE IDENTIFIER STRINGstatement : COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRINGstatement : DELETE1 NODE IDENTIFIER FROM IDENTIFIERstatement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIERstatement : SAVE GRAPH IDENTIFIER TO STRINGstatement : LOAD GRAPH IDENTIFIER FROM STRING'
     
-_lr_action_items = {'NODE':([0,8,9,],[2,19,21,]),'GRAPH':([0,10,11,],[3,23,24,]),'EDGE':([0,8,9,],[4,20,22,]),'VISUALIZE':([0,],[5,]),'FIND':([0,],[6,]),'PATH':([0,],[7,]),'COLOR':([0,],[8,]),'DELETE1':([0,],[9,]),'SAVE':([0,],[10,]),'LOAD':([0,],[11,]),'$end':([1,13,15,26,37,39,40,42,52,54,55,57,58,59,62,63,],[0,-3,-6,-2,-1,-7,-15,-9,-11,-13,-14,-5,-8,-10,-12,-4,]),'IDENTIFIER':([2,3,4,5,7,19,20,21,22,23,24,25,27,28,29,30,43,44,45,49,50,60,61,],[12,13,14,15,18,31,32,33,34,35,36,37,38,39,40,41,51,52,53,57,58,62,63,]),'CYCLE':([6,],[16,]),'MST':([6,],[17,]),'IN':([12,16,17,38,41,56,],[25,28,29,49,50,61,]),'DIRECTED':([13,],[26,]),'ARROW':([14,32,34,],[27,43,45,]),'TO':([18,35,],[30,46,]),'STRING':([31,46,47,51,],[42,54,55,59,]),'FROM':([33,36,53,],[44,47,60,]),'WEIGHT':([38,],[48,]),'NUMBER':([48,],[56,]),}
+_lr_action_items = {'NODE':([0,8,9,],[2,18,20,]),'GRAPH':([0,10,11,],[3,22,23,]),'EDGE':([0,8,9,],[4,19,21,]),'VISUALIZE':([0,],[5,]),'FIND':([0,],[6,]),'PATH':([0,],[7,]),'COLOR':([0,],[8,]),'DELETE1':([0,],[9,]),'SAVE':([0,],[10,]),'LOAD':([0,],[11,]),'$end':([1,13,15,25,35,37,39,49,51,52,54,55,56,59,60,],[0,-3,-6,-2,-1,-7,-9,-11,-13,-14,-5,-8,-10,-12,-4,]),'IDENTIFIER':([2,3,4,5,7,18,19,20,21,22,23,24,26,27,28,40,41,42,46,47,57,58,],[12,13,14,15,17,29,30,31,32,33,34,35,36,37,38,48,49,50,54,55,59,60,]),'CYCLE':([6,],[16,]),'IN':([12,16,36,38,53,],[24,27,46,47,58,]),'DIRECTED':([13,],[25,]),'ARROW':([14,30,32,],[26,40,42,]),'TO':([17,33,],[28,43,]),'STRING':([29,43,44,48,],[39,51,52,56,]),'FROM':([31,34,50,],[41,44,57,]),'WEIGHT':([36,],[45,]),'NUMBER':([45,],[53,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,19 +27,18 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> statement","S'",1,None,None,None),
-  ('statement -> NODE IDENTIFIER IN IDENTIFIER','statement',4,'p_statement_node','parser.py',10),
-  ('statement -> GRAPH IDENTIFIER DIRECTED','statement',3,'p_statement_directed_graph','parser.py',14),
-  ('statement -> GRAPH IDENTIFIER','statement',2,'p_statement_graph','parser.py',18),
-  ('statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER','statement',8,'p_statement_weighted_edge','parser.py',22),
-  ('statement -> EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER','statement',6,'p_statement_edge','parser.py',26),
-  ('statement -> VISUALIZE IDENTIFIER','statement',2,'p_statement_visualize','parser.py',34),
-  ('statement -> FIND CYCLE IN IDENTIFIER','statement',4,'p_statement_find_cycle','parser.py',38),
-  ('statement -> PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER','statement',6,'p_statement_shortest_path','parser.py',42),
-  ('statement -> COLOR NODE IDENTIFIER STRING','statement',4,'p_statement_color_node','parser.py',46),
-  ('statement -> COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING','statement',6,'p_statement_color_edge','parser.py',50),
-  ('statement -> DELETE1 NODE IDENTIFIER FROM IDENTIFIER','statement',5,'p_statement_delete_node','parser.py',54),
-  ('statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER','statement',7,'p_statement_delete_edge','parser.py',58),
-  ('statement -> SAVE GRAPH IDENTIFIER TO STRING','statement',5,'p_statement_save_graph','parser.py',70),
-  ('statement -> LOAD GRAPH IDENTIFIER FROM STRING','statement',5,'p_statement_load_graph','parser.py',74),
-  ('statement -> FIND MST IN IDENTIFIER','statement',4,'p_statement_mst','parser.py',78),
+  ('statement -> NODE IDENTIFIER IN IDENTIFIER','statement',4,'p_statement_node','parser.py',6),
+  ('statement -> GRAPH IDENTIFIER DIRECTED','statement',3,'p_statement_directed_graph','parser.py',10),
+  ('statement -> GRAPH IDENTIFIER','statement',2,'p_statement_graph','parser.py',14),
+  ('statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER','statement',8,'p_statement_weighted_edge','parser.py',18),
+  ('statement -> EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER','statement',6,'p_statement_edge','parser.py',22),
+  ('statement -> VISUALIZE IDENTIFIER','statement',2,'p_statement_visualize','parser.py',26),
+  ('statement -> FIND CYCLE IN IDENTIFIER','statement',4,'p_statement_find_cycle','parser.py',30),
+  ('statement -> PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER','statement',6,'p_statement_shortest_path','parser.py',34),
+  ('statement -> COLOR NODE IDENTIFIER STRING','statement',4,'p_statement_color_node','parser.py',38),
+  ('statement -> COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING','statement',6,'p_statement_color_edge','parser.py',42),
+  ('statement -> DELETE1 NODE IDENTIFIER FROM IDENTIFIER','statement',5,'p_statement_delete_node','parser.py',46),
+  ('statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER','statement',7,'p_statement_delete_edge','parser.py',50),
+  ('statement -> SAVE GRAPH IDENTIFIER TO STRING','statement',5,'p_statement_save_graph','parser.py',54),
+  ('statement -> LOAD GRAPH IDENTIFIER FROM STRING','statement',5,'p_statement_load_graph','parser.py',58),
 ]
