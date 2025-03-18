@@ -9,7 +9,7 @@ node D in G
 edge A -> B in G
 edge B -> C in G
 edge C -> D in G
-shortest path A to D in G
+find path A to D in G
 """
 
 run_gml(test_code)

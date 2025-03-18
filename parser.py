@@ -31,8 +31,8 @@ def p_statement_find_cycle(p):
     p[0] = ('find_cycle', p[4])
     
 def p_statement_shortest_path(p):
-    'statement : PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER'
-    p[0] = ('shortest_path', p[2], p[4], p[6])
+    'statement : FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER'
+    p[0] = ('shortest_path', p[3], p[5], p[7])
     
 def p_statement_color_node(p):
     'statement : COLOR NODE IDENTIFIER STRING'
