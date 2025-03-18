@@ -17,9 +17,10 @@ graph_store = {}
 visualize_called = False  # Global variabel til at tracke visualize
 pending_cycles = {}  # Holder cyklusser for grafer
 pending_paths = {}   # Holder korteste stier for grafer
+pending_msts = {} 
 
 def execute(ast):
-    global visualize_called, pending_cycles, pending_paths
+    global visualize_called, pending_cycles, pending_paths, pending_msts
     
     if ast is None:
         return
@@ -38,7 +39,8 @@ def execute(ast):
             if graph_name in graph_store:
                 cycle = pending_cycles.pop(graph_name, None)  # Hent og fjern cyklus fra pending
                 path = pending_paths.pop(graph_name, None)  # Hent og fjern path fra pending
-                visualize_interactive(graph_name, path=path, cycle=cycle)
+                mst = pending_msts.pop(graph_name, None)
+                visualize_interactive(graph_name, path=path, cycle=cycle, mst=mst)
             else:
                 print(f"Error: Graph {graph_name} does not exist")
     
@@ -102,6 +104,19 @@ def execute(ast):
                 print(f"Error: One or both nodes do not exist in {graph_name}")
         else: 
             print(f"Error: Graph {graph_name} does not exist")
+            
+    elif command == 'find_mst':
+        graph_name = ast[1]
+        if graph_name in graph_store:
+            graph = graph_store[graph_name]
+            if isinstance(graph, nx.DiGraph):
+                print(f"Error: MST can only be found for undirected graphs (Graph {graph_name} is directed)")
+            else:
+                mst = nx.minimum_spanning_tree(graph, weight="weight")
+                pending_msts[graph_name] = mst.edges(data=True)
+                print(f"MST found for {graph_name}: {list(mst.edges(data=True))}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
 
     elif command == 'delete1_node':
         node_name, graph_name = ast[1], ast[2]
@@ -117,7 +132,7 @@ def execute(ast):
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
-def visualize_interactive(graph_name, path=None, cycle=None):
+def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     """Vis den opdaterede graf i Plotly med pile til directed graphs, farveforklaringsboks og koordinatsystem."""
     if graph_name not in graph_store:
         print(f"Error: Graph {graph_name} does not exist")
@@ -132,14 +147,20 @@ def visualize_interactive(graph_name, path=None, cycle=None):
 
     cycle_edges = set((u, v) for u, v, *_ in cycle) if cycle else set()
     path_edges = set(zip(path, path[1:])) if path else set()
+    mst_edge_x, mst_edge_y = [], []
+    mst_edges = set((u, v) for u, v, _ in mst) if mst else set()
 
     for u, v, data in graph.edges(data=True):
         x0, y0 = pos[u]
         x1, y1 = pos[v]
         weight = str(data.get("weight", 1))
         edge_labels[(u, v)] = weight
+        
+        if (u, v) in mst_edges or (v, u) in mst_edges:
+            mst_edge_x.extend([x0, x1, None])
+            mst_edge_y.extend([y0, y1, None])
 
-        if (u, v) in cycle_edges or (v, u) in cycle_edges:
+        elif (u, v) in cycle_edges or (v, u) in cycle_edges:
             cycle_edge_x.extend([x0, x1, None])
             cycle_edge_y.extend([y0, y1, None])
         elif (u, v) in path_edges or (v, u) in path_edges:
@@ -176,8 +197,11 @@ def visualize_interactive(graph_name, path=None, cycle=None):
         text=node_text, textposition="top center",
         marker=dict(size=15, color=node_colors, line=dict(width=2, color="black"))
     )
+    
+    mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
+                        line=dict(width=3, color="orange"), hoverinfo='none')
 
-    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, node_trace])
+    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, node_trace])
 
     # **Tilføj vægte på edges**
     for (u, v), weight in edge_labels.items():
@@ -202,7 +226,8 @@ def visualize_interactive(graph_name, path=None, cycle=None):
     legend_annotation = dict(
         text="<span style='color:blue; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
-             "<span style='color:red; font-weight:bold;'>Red</span>: Cycles",
+             "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
+             "<span style='color:orange; font-weight:bold;'>Orange</span>: Minimum Spanning Tree",
         showarrow=False,
         xref="paper", yref="paper",
         x=0.5, y=-0.05, yanchor="top",

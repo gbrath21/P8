@@ -58,8 +58,9 @@ def p_statement_load_graph(p):
     'statement : LOAD GRAPH IDENTIFIER FROM STRING'
     p[0] = ('load_graph', p[3], p[5].strip('"'))
     
-# def p_statement_mst(p):
-#     'statement : FIND MST IN IDENTIFIER'
+def p_statement_find_mst(p):
+    'statement : FIND MST IN IDENTIFIER'
+    p[0] = ('find_mst', p[4])
 
 def p_error(p):
     if p:

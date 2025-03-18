@@ -37,6 +37,16 @@ edge A -> C weight 5 in G
 find cycle in G
 visualize G
 
+graph G
+node A in G
+node B in G
+node C in G
+edge A -> B weight 3 in G
+edge B -> C weight 1 in G
+edge A -> C weight 2 in G
+find mst in G
+visualize G
+
 graph H directed 
 node A in H
 node B in H
