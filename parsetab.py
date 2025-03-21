@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ARROW COLOR CYCLE DELETE1 DIRECTED EDGE FIND FROM GRAPH IDENTIFIER IN LOAD MST NODE NUMBER PATH SAVE SHORTEST STRING TO VISUALIZE WEIGHTstatement : NODE IDENTIFIER IN IDENTIFIERstatement : GRAPH IDENTIFIER DIRECTEDstatement : GRAPH IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIERstatement : VISUALIZE IDENTIFIERstatement : FIND CYCLE IN IDENTIFIERstatement : FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIERstatement : COLOR NODE IDENTIFIER STRINGstatement : COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRINGstatement : DELETE1 NODE IDENTIFIER FROM IDENTIFIERstatement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIERstatement : SAVE GRAPH IDENTIFIER TO STRINGstatement : LOAD GRAPH IDENTIFIER FROM STRINGstatement : FIND MST IN IDENTIFIER'
+_lr_signature = 'ARROW COLOR CYCLE DELETE1 DIRECTED EDGE FIND FROM GRAPH IDENTIFIER IF IN LOAD MST NODE NUMBER PATH SAVE SHORTEST STRING THEN TO VISUALIZE WEIGHTstatement : NODE IDENTIFIER IN IDENTIFIERstatement : GRAPH IDENTIFIER DIRECTEDstatement : GRAPH IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIERstatement : EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIERstatement : VISUALIZE IDENTIFIERstatement : FIND CYCLE IN IDENTIFIERstatement : FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIERstatement : COLOR NODE IDENTIFIER STRINGstatement : COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRINGstatement : DELETE1 NODE IDENTIFIER FROM IDENTIFIERstatement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIERstatement : SAVE GRAPH IDENTIFIER TO STRINGstatement : LOAD GRAPH IDENTIFIER FROM STRINGstatement : FIND MST IN IDENTIFIERstatement : IF NODE IDENTIFIER IN IDENTIFIER THEN statementstatement : IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statementstatement : IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statementstatement : IF FIND CYCLE IN IDENTIFIER THEN statement'
     
-_lr_action_items = {'NODE':([0,7,8,],[2,18,20,]),'GRAPH':([0,9,10,],[3,22,23,]),'EDGE':([0,7,8,],[4,19,21,]),'VISUALIZE':([0,],[5,]),'FIND':([0,],[6,]),'COLOR':([0,],[7,]),'DELETE1':([0,],[8,]),'SAVE':([0,],[9,]),'LOAD':([0,],[10,]),'$end':([1,12,14,25,36,38,40,41,51,53,54,56,58,61,62,63,],[0,-3,-6,-2,-1,-7,-15,-9,-11,-13,-14,-5,-10,-8,-12,-4,]),'IDENTIFIER':([2,3,4,5,16,18,19,20,21,22,23,24,26,27,29,39,42,43,44,48,57,59,60,],[11,12,13,14,28,30,31,32,33,34,35,36,37,38,40,49,50,51,52,56,61,62,63,]),'CYCLE':([6,],[15,]),'PATH':([6,],[16,]),'MST':([6,],[17,]),'IN':([11,15,17,37,49,55,],[24,27,29,48,57,60,]),'DIRECTED':([12,],[25,]),'ARROW':([13,31,33,],[26,42,44,]),'TO':([28,34,],[39,45,]),'STRING':([30,45,46,50,],[41,53,54,58,]),'FROM':([32,35,52,],[43,46,59,]),'WEIGHT':([37,],[47,]),'NUMBER':([47,],[55,]),}
+_lr_action_items = {'NODE':([0,7,8,11,77,80,89,90,],[2,19,21,25,2,2,2,2,]),'GRAPH':([0,9,10,77,80,89,90,],[3,23,24,3,3,3,3,]),'EDGE':([0,7,8,11,77,80,89,90,],[4,20,22,26,4,4,4,4,]),'VISUALIZE':([0,77,80,89,90,],[5,5,5,5,5,]),'FIND':([0,11,77,80,89,90,],[6,28,6,6,6,6,]),'COLOR':([0,77,80,89,90,],[7,7,7,7,7,]),'DELETE1':([0,77,80,89,90,],[8,8,8,8,8,]),'SAVE':([0,77,80,89,90,],[9,9,9,9,9,]),'LOAD':([0,77,80,89,90,],[10,10,10,10,10,]),'IF':([0,77,80,89,90,],[11,11,11,11,11,]),'$end':([1,13,15,30,45,47,49,50,64,66,67,73,75,82,83,84,87,88,91,92,],[0,-3,-6,-2,-1,-7,-15,-9,-11,-13,-14,-5,-10,-8,-12,-16,-19,-4,-17,-18,]),'IDENTIFIER':([2,3,4,5,17,19,20,21,22,23,24,25,26,27,29,31,32,34,48,51,52,53,56,57,58,59,61,74,76,78,79,81,],[12,13,14,15,33,35,36,37,38,39,40,41,42,43,45,46,47,49,62,63,64,65,68,69,70,71,73,82,83,85,86,88,]),'CYCLE':([6,28,],[16,44,]),'PATH':([6,11,],[17,27,]),'MST':([6,],[18,]),'IN':([12,16,18,41,44,46,62,69,70,72,],[29,32,34,56,59,61,74,78,79,81,]),'DIRECTED':([13,],[30,]),'ARROW':([14,36,38,42,],[31,51,53,57,]),'TO':([33,39,43,],[48,54,58,]),'STRING':([35,54,55,63,],[50,66,67,75,]),'FROM':([37,40,65,],[52,55,76,]),'WEIGHT':([46,],[60,]),'NUMBER':([60,],[72,]),'THEN':([68,71,85,86,],[77,80,89,90,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'statement':([0,],[1,]),}
+_lr_goto_items = {'statement':([0,77,80,89,90,],[1,84,87,91,92,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -42,4 +42,8 @@ _lr_productions = [
   ('statement -> SAVE GRAPH IDENTIFIER TO STRING','statement',5,'p_statement_save_graph','parser.py',54),
   ('statement -> LOAD GRAPH IDENTIFIER FROM STRING','statement',5,'p_statement_load_graph','parser.py',58),
   ('statement -> FIND MST IN IDENTIFIER','statement',4,'p_statement_find_mst','parser.py',62),
+  ('statement -> IF NODE IDENTIFIER IN IDENTIFIER THEN statement','statement',7,'p_statement_if_node','parser.py',66),
+  ('statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement','statement',9,'p_statement_if_edge','parser.py',70),
+  ('statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement','statement',9,'p_statement_if_path','parser.py',74),
+  ('statement -> IF FIND CYCLE IN IDENTIFIER THEN statement','statement',7,'p_statement_if_cycle','parser.py',78),
 ]

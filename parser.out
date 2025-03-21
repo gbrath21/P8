@@ -22,36 +22,42 @@ Rule 12    statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
 Rule 13    statement -> SAVE GRAPH IDENTIFIER TO STRING
 Rule 14    statement -> LOAD GRAPH IDENTIFIER FROM STRING
 Rule 15    statement -> FIND MST IN IDENTIFIER
+Rule 16    statement -> IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+Rule 17    statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+Rule 18    statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+Rule 19    statement -> IF FIND CYCLE IN IDENTIFIER THEN statement
 
 Terminals, with rules where they appear
 
-ARROW                : 4 5 10 12
+ARROW                : 4 5 10 12 17
 COLOR                : 9 10
-CYCLE                : 7
+CYCLE                : 7 19
 DELETE1              : 11 12
 DIRECTED             : 2
-EDGE                 : 4 5 10 12
-FIND                 : 7 8 15
+EDGE                 : 4 5 10 12 17
+FIND                 : 7 8 15 19
 FROM                 : 11 12 14
 GRAPH                : 2 3 13 14
-IDENTIFIER           : 1 1 2 3 4 4 4 5 5 5 6 7 8 8 8 9 10 10 11 11 12 12 12 13 14 15
-IN                   : 1 4 5 7 8 15
+IDENTIFIER           : 1 1 2 3 4 4 4 5 5 5 6 7 8 8 8 9 10 10 11 11 12 12 12 13 14 15 16 16 17 17 17 18 18 18 19
+IF                   : 16 17 18 19
+IN                   : 1 4 5 7 8 15 16 17 18 19
 LOAD                 : 14
 MST                  : 15
-NODE                 : 1 9 11
+NODE                 : 1 9 11 16
 NUMBER               : 4
-PATH                 : 8
+PATH                 : 8 18
 SAVE                 : 13
 SHORTEST             : 
 STRING               : 9 10 13 14
-TO                   : 8 13
+THEN                 : 16 17 18 19
+TO                   : 8 13 18
 VISUALIZE            : 6
 WEIGHT               : 4
 error                : 
 
 Nonterminals, with rules where they appear
 
-statement            : 0
+statement            : 16 17 18 19 0
 
 Parsing method: LALR
 
@@ -73,6 +79,10 @@ state 0
     (13) statement -> . SAVE GRAPH IDENTIFIER TO STRING
     (14) statement -> . LOAD GRAPH IDENTIFIER FROM STRING
     (15) statement -> . FIND MST IN IDENTIFIER
+    (16) statement -> . IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> . IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> . IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> . IF FIND CYCLE IN IDENTIFIER THEN statement
 
     NODE            shift and go to state 2
     GRAPH           shift and go to state 3
@@ -83,6 +93,7 @@ state 0
     DELETE1         shift and go to state 8
     SAVE            shift and go to state 9
     LOAD            shift and go to state 10
+    IF              shift and go to state 11
 
     statement                      shift and go to state 1
 
@@ -96,7 +107,7 @@ state 2
 
     (1) statement -> NODE . IDENTIFIER IN IDENTIFIER
 
-    IDENTIFIER      shift and go to state 11
+    IDENTIFIER      shift and go to state 12
 
 
 state 3
@@ -104,7 +115,7 @@ state 3
     (2) statement -> GRAPH . IDENTIFIER DIRECTED
     (3) statement -> GRAPH . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 12
+    IDENTIFIER      shift and go to state 13
 
 
 state 4
@@ -112,14 +123,14 @@ state 4
     (4) statement -> EDGE . IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
     (5) statement -> EDGE . IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER
 
-    IDENTIFIER      shift and go to state 13
+    IDENTIFIER      shift and go to state 14
 
 
 state 5
 
     (6) statement -> VISUALIZE . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 14
+    IDENTIFIER      shift and go to state 15
 
 
 state 6
@@ -128,9 +139,9 @@ state 6
     (8) statement -> FIND . PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER
     (15) statement -> FIND . MST IN IDENTIFIER
 
-    CYCLE           shift and go to state 15
-    PATH            shift and go to state 16
-    MST             shift and go to state 17
+    CYCLE           shift and go to state 16
+    PATH            shift and go to state 17
+    MST             shift and go to state 18
 
 
 state 7
@@ -138,8 +149,8 @@ state 7
     (9) statement -> COLOR . NODE IDENTIFIER STRING
     (10) statement -> COLOR . EDGE IDENTIFIER ARROW IDENTIFIER STRING
 
-    NODE            shift and go to state 18
-    EDGE            shift and go to state 19
+    NODE            shift and go to state 19
+    EDGE            shift and go to state 20
 
 
 state 8
@@ -147,397 +158,722 @@ state 8
     (11) statement -> DELETE1 . NODE IDENTIFIER FROM IDENTIFIER
     (12) statement -> DELETE1 . EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
 
-    NODE            shift and go to state 20
-    EDGE            shift and go to state 21
+    NODE            shift and go to state 21
+    EDGE            shift and go to state 22
 
 
 state 9
 
     (13) statement -> SAVE . GRAPH IDENTIFIER TO STRING
 
-    GRAPH           shift and go to state 22
+    GRAPH           shift and go to state 23
 
 
 state 10
 
     (14) statement -> LOAD . GRAPH IDENTIFIER FROM STRING
 
-    GRAPH           shift and go to state 23
+    GRAPH           shift and go to state 24
 
 
 state 11
 
-    (1) statement -> NODE IDENTIFIER . IN IDENTIFIER
+    (16) statement -> IF . NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> IF . EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> IF . PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> IF . FIND CYCLE IN IDENTIFIER THEN statement
 
-    IN              shift and go to state 24
+    NODE            shift and go to state 25
+    EDGE            shift and go to state 26
+    PATH            shift and go to state 27
+    FIND            shift and go to state 28
 
 
 state 12
 
-    (2) statement -> GRAPH IDENTIFIER . DIRECTED
-    (3) statement -> GRAPH IDENTIFIER .
+    (1) statement -> NODE IDENTIFIER . IN IDENTIFIER
 
-    DIRECTED        shift and go to state 25
-    $end            reduce using rule 3 (statement -> GRAPH IDENTIFIER .)
+    IN              shift and go to state 29
 
 
 state 13
 
-    (4) statement -> EDGE IDENTIFIER . ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
-    (5) statement -> EDGE IDENTIFIER . ARROW IDENTIFIER IN IDENTIFIER
+    (2) statement -> GRAPH IDENTIFIER . DIRECTED
+    (3) statement -> GRAPH IDENTIFIER .
 
-    ARROW           shift and go to state 26
+    DIRECTED        shift and go to state 30
+    $end            reduce using rule 3 (statement -> GRAPH IDENTIFIER .)
 
 
 state 14
+
+    (4) statement -> EDGE IDENTIFIER . ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
+    (5) statement -> EDGE IDENTIFIER . ARROW IDENTIFIER IN IDENTIFIER
+
+    ARROW           shift and go to state 31
+
+
+state 15
 
     (6) statement -> VISUALIZE IDENTIFIER .
 
     $end            reduce using rule 6 (statement -> VISUALIZE IDENTIFIER .)
 
 
-state 15
+state 16
 
     (7) statement -> FIND CYCLE . IN IDENTIFIER
 
-    IN              shift and go to state 27
-
-
-state 16
-
-    (8) statement -> FIND PATH . IDENTIFIER TO IDENTIFIER IN IDENTIFIER
-
-    IDENTIFIER      shift and go to state 28
+    IN              shift and go to state 32
 
 
 state 17
 
-    (15) statement -> FIND MST . IN IDENTIFIER
-
-    IN              shift and go to state 29
-
-
-state 18
-
-    (9) statement -> COLOR NODE . IDENTIFIER STRING
-
-    IDENTIFIER      shift and go to state 30
-
-
-state 19
-
-    (10) statement -> COLOR EDGE . IDENTIFIER ARROW IDENTIFIER STRING
-
-    IDENTIFIER      shift and go to state 31
-
-
-state 20
-
-    (11) statement -> DELETE1 NODE . IDENTIFIER FROM IDENTIFIER
-
-    IDENTIFIER      shift and go to state 32
-
-
-state 21
-
-    (12) statement -> DELETE1 EDGE . IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+    (8) statement -> FIND PATH . IDENTIFIER TO IDENTIFIER IN IDENTIFIER
 
     IDENTIFIER      shift and go to state 33
 
 
-state 22
+state 18
 
-    (13) statement -> SAVE GRAPH . IDENTIFIER TO STRING
+    (15) statement -> FIND MST . IN IDENTIFIER
 
-    IDENTIFIER      shift and go to state 34
+    IN              shift and go to state 34
 
 
-state 23
+state 19
 
-    (14) statement -> LOAD GRAPH . IDENTIFIER FROM STRING
+    (9) statement -> COLOR NODE . IDENTIFIER STRING
 
     IDENTIFIER      shift and go to state 35
 
 
-state 24
+state 20
 
-    (1) statement -> NODE IDENTIFIER IN . IDENTIFIER
+    (10) statement -> COLOR EDGE . IDENTIFIER ARROW IDENTIFIER STRING
 
     IDENTIFIER      shift and go to state 36
 
 
+state 21
+
+    (11) statement -> DELETE1 NODE . IDENTIFIER FROM IDENTIFIER
+
+    IDENTIFIER      shift and go to state 37
+
+
+state 22
+
+    (12) statement -> DELETE1 EDGE . IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+
+    IDENTIFIER      shift and go to state 38
+
+
+state 23
+
+    (13) statement -> SAVE GRAPH . IDENTIFIER TO STRING
+
+    IDENTIFIER      shift and go to state 39
+
+
+state 24
+
+    (14) statement -> LOAD GRAPH . IDENTIFIER FROM STRING
+
+    IDENTIFIER      shift and go to state 40
+
+
 state 25
+
+    (16) statement -> IF NODE . IDENTIFIER IN IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 41
+
+
+state 26
+
+    (17) statement -> IF EDGE . IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 42
+
+
+state 27
+
+    (18) statement -> IF PATH . IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 43
+
+
+state 28
+
+    (19) statement -> IF FIND . CYCLE IN IDENTIFIER THEN statement
+
+    CYCLE           shift and go to state 44
+
+
+state 29
+
+    (1) statement -> NODE IDENTIFIER IN . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 45
+
+
+state 30
 
     (2) statement -> GRAPH IDENTIFIER DIRECTED .
 
     $end            reduce using rule 2 (statement -> GRAPH IDENTIFIER DIRECTED .)
 
 
-state 26
+state 31
 
     (4) statement -> EDGE IDENTIFIER ARROW . IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
     (5) statement -> EDGE IDENTIFIER ARROW . IDENTIFIER IN IDENTIFIER
 
-    IDENTIFIER      shift and go to state 37
-
-
-state 27
-
-    (7) statement -> FIND CYCLE IN . IDENTIFIER
-
-    IDENTIFIER      shift and go to state 38
-
-
-state 28
-
-    (8) statement -> FIND PATH IDENTIFIER . TO IDENTIFIER IN IDENTIFIER
-
-    TO              shift and go to state 39
-
-
-state 29
-
-    (15) statement -> FIND MST IN . IDENTIFIER
-
-    IDENTIFIER      shift and go to state 40
-
-
-state 30
-
-    (9) statement -> COLOR NODE IDENTIFIER . STRING
-
-    STRING          shift and go to state 41
-
-
-state 31
-
-    (10) statement -> COLOR EDGE IDENTIFIER . ARROW IDENTIFIER STRING
-
-    ARROW           shift and go to state 42
+    IDENTIFIER      shift and go to state 46
 
 
 state 32
 
-    (11) statement -> DELETE1 NODE IDENTIFIER . FROM IDENTIFIER
+    (7) statement -> FIND CYCLE IN . IDENTIFIER
 
-    FROM            shift and go to state 43
+    IDENTIFIER      shift and go to state 47
 
 
 state 33
 
-    (12) statement -> DELETE1 EDGE IDENTIFIER . ARROW IDENTIFIER FROM IDENTIFIER
+    (8) statement -> FIND PATH IDENTIFIER . TO IDENTIFIER IN IDENTIFIER
 
-    ARROW           shift and go to state 44
+    TO              shift and go to state 48
 
 
 state 34
 
-    (13) statement -> SAVE GRAPH IDENTIFIER . TO STRING
+    (15) statement -> FIND MST IN . IDENTIFIER
 
-    TO              shift and go to state 45
+    IDENTIFIER      shift and go to state 49
 
 
 state 35
 
-    (14) statement -> LOAD GRAPH IDENTIFIER . FROM STRING
+    (9) statement -> COLOR NODE IDENTIFIER . STRING
 
-    FROM            shift and go to state 46
+    STRING          shift and go to state 50
 
 
 state 36
+
+    (10) statement -> COLOR EDGE IDENTIFIER . ARROW IDENTIFIER STRING
+
+    ARROW           shift and go to state 51
+
+
+state 37
+
+    (11) statement -> DELETE1 NODE IDENTIFIER . FROM IDENTIFIER
+
+    FROM            shift and go to state 52
+
+
+state 38
+
+    (12) statement -> DELETE1 EDGE IDENTIFIER . ARROW IDENTIFIER FROM IDENTIFIER
+
+    ARROW           shift and go to state 53
+
+
+state 39
+
+    (13) statement -> SAVE GRAPH IDENTIFIER . TO STRING
+
+    TO              shift and go to state 54
+
+
+state 40
+
+    (14) statement -> LOAD GRAPH IDENTIFIER . FROM STRING
+
+    FROM            shift and go to state 55
+
+
+state 41
+
+    (16) statement -> IF NODE IDENTIFIER . IN IDENTIFIER THEN statement
+
+    IN              shift and go to state 56
+
+
+state 42
+
+    (17) statement -> IF EDGE IDENTIFIER . ARROW IDENTIFIER IN IDENTIFIER THEN statement
+
+    ARROW           shift and go to state 57
+
+
+state 43
+
+    (18) statement -> IF PATH IDENTIFIER . TO IDENTIFIER IN IDENTIFIER THEN statement
+
+    TO              shift and go to state 58
+
+
+state 44
+
+    (19) statement -> IF FIND CYCLE . IN IDENTIFIER THEN statement
+
+    IN              shift and go to state 59
+
+
+state 45
 
     (1) statement -> NODE IDENTIFIER IN IDENTIFIER .
 
     $end            reduce using rule 1 (statement -> NODE IDENTIFIER IN IDENTIFIER .)
 
 
-state 37
+state 46
 
     (4) statement -> EDGE IDENTIFIER ARROW IDENTIFIER . WEIGHT NUMBER IN IDENTIFIER
     (5) statement -> EDGE IDENTIFIER ARROW IDENTIFIER . IN IDENTIFIER
 
-    WEIGHT          shift and go to state 47
-    IN              shift and go to state 48
+    WEIGHT          shift and go to state 60
+    IN              shift and go to state 61
 
 
-state 38
+state 47
 
     (7) statement -> FIND CYCLE IN IDENTIFIER .
 
     $end            reduce using rule 7 (statement -> FIND CYCLE IN IDENTIFIER .)
 
 
-state 39
+state 48
 
     (8) statement -> FIND PATH IDENTIFIER TO . IDENTIFIER IN IDENTIFIER
 
-    IDENTIFIER      shift and go to state 49
+    IDENTIFIER      shift and go to state 62
 
 
-state 40
+state 49
 
     (15) statement -> FIND MST IN IDENTIFIER .
 
     $end            reduce using rule 15 (statement -> FIND MST IN IDENTIFIER .)
 
 
-state 41
+state 50
 
     (9) statement -> COLOR NODE IDENTIFIER STRING .
 
     $end            reduce using rule 9 (statement -> COLOR NODE IDENTIFIER STRING .)
 
 
-state 42
+state 51
 
     (10) statement -> COLOR EDGE IDENTIFIER ARROW . IDENTIFIER STRING
 
-    IDENTIFIER      shift and go to state 50
+    IDENTIFIER      shift and go to state 63
 
 
-state 43
+state 52
 
     (11) statement -> DELETE1 NODE IDENTIFIER FROM . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 51
+    IDENTIFIER      shift and go to state 64
 
 
-state 44
+state 53
 
     (12) statement -> DELETE1 EDGE IDENTIFIER ARROW . IDENTIFIER FROM IDENTIFIER
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 65
 
 
-state 45
+state 54
 
     (13) statement -> SAVE GRAPH IDENTIFIER TO . STRING
 
-    STRING          shift and go to state 53
+    STRING          shift and go to state 66
 
 
-state 46
+state 55
 
     (14) statement -> LOAD GRAPH IDENTIFIER FROM . STRING
 
-    STRING          shift and go to state 54
+    STRING          shift and go to state 67
 
 
-state 47
+state 56
+
+    (16) statement -> IF NODE IDENTIFIER IN . IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 68
+
+
+state 57
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW . IDENTIFIER IN IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 69
+
+
+state 58
+
+    (18) statement -> IF PATH IDENTIFIER TO . IDENTIFIER IN IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 70
+
+
+state 59
+
+    (19) statement -> IF FIND CYCLE IN . IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 71
+
+
+state 60
 
     (4) statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT . NUMBER IN IDENTIFIER
 
-    NUMBER          shift and go to state 55
+    NUMBER          shift and go to state 72
 
 
-state 48
+state 61
 
     (5) statement -> EDGE IDENTIFIER ARROW IDENTIFIER IN . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 56
+    IDENTIFIER      shift and go to state 73
 
 
-state 49
+state 62
 
     (8) statement -> FIND PATH IDENTIFIER TO IDENTIFIER . IN IDENTIFIER
 
-    IN              shift and go to state 57
+    IN              shift and go to state 74
 
 
-state 50
+state 63
 
     (10) statement -> COLOR EDGE IDENTIFIER ARROW IDENTIFIER . STRING
 
-    STRING          shift and go to state 58
+    STRING          shift and go to state 75
 
 
-state 51
+state 64
 
     (11) statement -> DELETE1 NODE IDENTIFIER FROM IDENTIFIER .
 
     $end            reduce using rule 11 (statement -> DELETE1 NODE IDENTIFIER FROM IDENTIFIER .)
 
 
-state 52
+state 65
 
     (12) statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER . FROM IDENTIFIER
 
-    FROM            shift and go to state 59
+    FROM            shift and go to state 76
 
 
-state 53
+state 66
 
     (13) statement -> SAVE GRAPH IDENTIFIER TO STRING .
 
     $end            reduce using rule 13 (statement -> SAVE GRAPH IDENTIFIER TO STRING .)
 
 
-state 54
+state 67
 
     (14) statement -> LOAD GRAPH IDENTIFIER FROM STRING .
 
     $end            reduce using rule 14 (statement -> LOAD GRAPH IDENTIFIER FROM STRING .)
 
 
-state 55
+state 68
+
+    (16) statement -> IF NODE IDENTIFIER IN IDENTIFIER . THEN statement
+
+    THEN            shift and go to state 77
+
+
+state 69
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER . IN IDENTIFIER THEN statement
+
+    IN              shift and go to state 78
+
+
+state 70
+
+    (18) statement -> IF PATH IDENTIFIER TO IDENTIFIER . IN IDENTIFIER THEN statement
+
+    IN              shift and go to state 79
+
+
+state 71
+
+    (19) statement -> IF FIND CYCLE IN IDENTIFIER . THEN statement
+
+    THEN            shift and go to state 80
+
+
+state 72
 
     (4) statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER . IN IDENTIFIER
 
-    IN              shift and go to state 60
+    IN              shift and go to state 81
 
 
-state 56
+state 73
 
     (5) statement -> EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER .
 
     $end            reduce using rule 5 (statement -> EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER .)
 
 
-state 57
+state 74
 
     (8) statement -> FIND PATH IDENTIFIER TO IDENTIFIER IN . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 61
+    IDENTIFIER      shift and go to state 82
 
 
-state 58
+state 75
 
     (10) statement -> COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING .
 
     $end            reduce using rule 10 (statement -> COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING .)
 
 
-state 59
+state 76
 
     (12) statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 62
+    IDENTIFIER      shift and go to state 83
 
 
-state 60
+state 77
+
+    (16) statement -> IF NODE IDENTIFIER IN IDENTIFIER THEN . statement
+    (1) statement -> . NODE IDENTIFIER IN IDENTIFIER
+    (2) statement -> . GRAPH IDENTIFIER DIRECTED
+    (3) statement -> . GRAPH IDENTIFIER
+    (4) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
+    (5) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER
+    (6) statement -> . VISUALIZE IDENTIFIER
+    (7) statement -> . FIND CYCLE IN IDENTIFIER
+    (8) statement -> . FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER
+    (9) statement -> . COLOR NODE IDENTIFIER STRING
+    (10) statement -> . COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING
+    (11) statement -> . DELETE1 NODE IDENTIFIER FROM IDENTIFIER
+    (12) statement -> . DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+    (13) statement -> . SAVE GRAPH IDENTIFIER TO STRING
+    (14) statement -> . LOAD GRAPH IDENTIFIER FROM STRING
+    (15) statement -> . FIND MST IN IDENTIFIER
+    (16) statement -> . IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> . IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> . IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> . IF FIND CYCLE IN IDENTIFIER THEN statement
+
+    NODE            shift and go to state 2
+    GRAPH           shift and go to state 3
+    EDGE            shift and go to state 4
+    VISUALIZE       shift and go to state 5
+    FIND            shift and go to state 6
+    COLOR           shift and go to state 7
+    DELETE1         shift and go to state 8
+    SAVE            shift and go to state 9
+    LOAD            shift and go to state 10
+    IF              shift and go to state 11
+
+    statement                      shift and go to state 84
+
+state 78
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN . IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 85
+
+
+state 79
+
+    (18) statement -> IF PATH IDENTIFIER TO IDENTIFIER IN . IDENTIFIER THEN statement
+
+    IDENTIFIER      shift and go to state 86
+
+
+state 80
+
+    (19) statement -> IF FIND CYCLE IN IDENTIFIER THEN . statement
+    (1) statement -> . NODE IDENTIFIER IN IDENTIFIER
+    (2) statement -> . GRAPH IDENTIFIER DIRECTED
+    (3) statement -> . GRAPH IDENTIFIER
+    (4) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
+    (5) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER
+    (6) statement -> . VISUALIZE IDENTIFIER
+    (7) statement -> . FIND CYCLE IN IDENTIFIER
+    (8) statement -> . FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER
+    (9) statement -> . COLOR NODE IDENTIFIER STRING
+    (10) statement -> . COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING
+    (11) statement -> . DELETE1 NODE IDENTIFIER FROM IDENTIFIER
+    (12) statement -> . DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+    (13) statement -> . SAVE GRAPH IDENTIFIER TO STRING
+    (14) statement -> . LOAD GRAPH IDENTIFIER FROM STRING
+    (15) statement -> . FIND MST IN IDENTIFIER
+    (16) statement -> . IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> . IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> . IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> . IF FIND CYCLE IN IDENTIFIER THEN statement
+
+    NODE            shift and go to state 2
+    GRAPH           shift and go to state 3
+    EDGE            shift and go to state 4
+    VISUALIZE       shift and go to state 5
+    FIND            shift and go to state 6
+    COLOR           shift and go to state 7
+    DELETE1         shift and go to state 8
+    SAVE            shift and go to state 9
+    LOAD            shift and go to state 10
+    IF              shift and go to state 11
+
+    statement                      shift and go to state 87
+
+state 81
 
     (4) statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 63
+    IDENTIFIER      shift and go to state 88
 
 
-state 61
+state 82
 
     (8) statement -> FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER .
 
     $end            reduce using rule 8 (statement -> FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER .)
 
 
-state 62
+state 83
 
     (12) statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER .
 
     $end            reduce using rule 12 (statement -> DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER .)
 
 
-state 63
+state 84
+
+    (16) statement -> IF NODE IDENTIFIER IN IDENTIFIER THEN statement .
+
+    $end            reduce using rule 16 (statement -> IF NODE IDENTIFIER IN IDENTIFIER THEN statement .)
+
+
+state 85
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER . THEN statement
+
+    THEN            shift and go to state 89
+
+
+state 86
+
+    (18) statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER . THEN statement
+
+    THEN            shift and go to state 90
+
+
+state 87
+
+    (19) statement -> IF FIND CYCLE IN IDENTIFIER THEN statement .
+
+    $end            reduce using rule 19 (statement -> IF FIND CYCLE IN IDENTIFIER THEN statement .)
+
+
+state 88
 
     (4) statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER .
 
     $end            reduce using rule 4 (statement -> EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER .)
+
+
+state 89
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN . statement
+    (1) statement -> . NODE IDENTIFIER IN IDENTIFIER
+    (2) statement -> . GRAPH IDENTIFIER DIRECTED
+    (3) statement -> . GRAPH IDENTIFIER
+    (4) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
+    (5) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER
+    (6) statement -> . VISUALIZE IDENTIFIER
+    (7) statement -> . FIND CYCLE IN IDENTIFIER
+    (8) statement -> . FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER
+    (9) statement -> . COLOR NODE IDENTIFIER STRING
+    (10) statement -> . COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING
+    (11) statement -> . DELETE1 NODE IDENTIFIER FROM IDENTIFIER
+    (12) statement -> . DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+    (13) statement -> . SAVE GRAPH IDENTIFIER TO STRING
+    (14) statement -> . LOAD GRAPH IDENTIFIER FROM STRING
+    (15) statement -> . FIND MST IN IDENTIFIER
+    (16) statement -> . IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> . IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> . IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> . IF FIND CYCLE IN IDENTIFIER THEN statement
+
+    NODE            shift and go to state 2
+    GRAPH           shift and go to state 3
+    EDGE            shift and go to state 4
+    VISUALIZE       shift and go to state 5
+    FIND            shift and go to state 6
+    COLOR           shift and go to state 7
+    DELETE1         shift and go to state 8
+    SAVE            shift and go to state 9
+    LOAD            shift and go to state 10
+    IF              shift and go to state 11
+
+    statement                      shift and go to state 91
+
+state 90
+
+    (18) statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN . statement
+    (1) statement -> . NODE IDENTIFIER IN IDENTIFIER
+    (2) statement -> . GRAPH IDENTIFIER DIRECTED
+    (3) statement -> . GRAPH IDENTIFIER
+    (4) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER WEIGHT NUMBER IN IDENTIFIER
+    (5) statement -> . EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER
+    (6) statement -> . VISUALIZE IDENTIFIER
+    (7) statement -> . FIND CYCLE IN IDENTIFIER
+    (8) statement -> . FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER
+    (9) statement -> . COLOR NODE IDENTIFIER STRING
+    (10) statement -> . COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING
+    (11) statement -> . DELETE1 NODE IDENTIFIER FROM IDENTIFIER
+    (12) statement -> . DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER
+    (13) statement -> . SAVE GRAPH IDENTIFIER TO STRING
+    (14) statement -> . LOAD GRAPH IDENTIFIER FROM STRING
+    (15) statement -> . FIND MST IN IDENTIFIER
+    (16) statement -> . IF NODE IDENTIFIER IN IDENTIFIER THEN statement
+    (17) statement -> . IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement
+    (18) statement -> . IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement
+    (19) statement -> . IF FIND CYCLE IN IDENTIFIER THEN statement
+
+    NODE            shift and go to state 2
+    GRAPH           shift and go to state 3
+    EDGE            shift and go to state 4
+    VISUALIZE       shift and go to state 5
+    FIND            shift and go to state 6
+    COLOR           shift and go to state 7
+    DELETE1         shift and go to state 8
+    SAVE            shift and go to state 9
+    LOAD            shift and go to state 10
+    IF              shift and go to state 11
+
+    statement                      shift and go to state 92
+
+state 91
+
+    (17) statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement .
+
+    $end            reduce using rule 17 (statement -> IF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement .)
+
+
+state 92
+
+    (18) statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement .
+
+    $end            reduce using rule 18 (statement -> IF PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement .)
 

@@ -44,16 +44,19 @@ def execute(ast):
             else:
                 print(f"Error: Graph {graph_name} does not exist")
     
+    # Create graph
     elif command == 'graph':
         graph_name = ast[1]
         graph_store[graph_name] = nx.Graph()
         print(f"Created graph: {graph_name}")
 
+    # Directed or undirected graph
     elif command == 'directed_graph':
         graph_name = ast[1]
         graph_store[graph_name] = nx.DiGraph()
         print(f"Created directed graph: {graph_name}")
 
+    # Create node
     elif command == 'node':
         node_name, graph_name = ast[1], ast[2]
         if graph_name in graph_store:
@@ -62,6 +65,7 @@ def execute(ast):
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
+    #Create edge
     elif command == 'edge':
         node1, node2, graph_name, weight = ast[1], ast[2], ast[3], int(ast[4]) if len(ast) > 4 else 0
         if graph_name in graph_store:
@@ -73,7 +77,8 @@ def execute(ast):
                 print(f"Error: One or both nodes ({node1}, {node2}) do not exist in {graph_name}")
         else:
             print(f"Error: Graph {graph_name} does not exist")
-            
+    
+    #Find cycle
     elif command == 'find_cycle':
         graph_name = ast[1]
         if graph_name in graph_store:
@@ -85,7 +90,8 @@ def execute(ast):
                 print(f"No cycle found in {graph_name}")
         else:
             print(f"Error: Graph {graph_name} does not exist")
-                
+    
+    # Find shortest path
     elif command == 'shortest_path':
         node1, node2, graph_name = ast[1], ast[2], ast[3]
         if graph_name in graph_store:
@@ -104,7 +110,8 @@ def execute(ast):
                 print(f"Error: One or both nodes do not exist in {graph_name}")
         else: 
             print(f"Error: Graph {graph_name} does not exist")
-            
+    
+    #Find mst
     elif command == 'find_mst':
         graph_name = ast[1]
         if graph_name in graph_store:
@@ -118,6 +125,7 @@ def execute(ast):
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
+    # Delete a node in the graph
     elif command == 'delete1_node':
         node_name, graph_name = ast[1], ast[2]
     
@@ -132,8 +140,40 @@ def execute(ast):
         else:
             print(f"Error: Graph {graph_name} does not exist")
 
+    # If statements 
+    elif command == 'if_node':
+        node, graph_name, then_stmt = ast[1], ast[2], ast[3]
+        if graph_name in graph_store and node in graph_store[graph_name]:
+            execute(then_stmt)
+            
+    elif command == 'if_edge':
+        node, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+        graph = graph_store.get(graph_name)
+        if graph and graph.has_edge(node1, node2):
+            exectute(then.stmt)
+            
+    elif command == 'if_path':
+        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+        graph = graph_store.get(graph_name)
+        if graph:
+            try:
+                nx.shortest_path(graph, source=node1, target=node2)
+                executre(then.stmt)
+            except nx.NetworkXNoPath:
+                pass
+    
+    elif command == 'if_cycle':
+        graph_name, then_stmt = ast[1], ast[2]
+        graph = graph_store.get(graph_name)
+        if graph:
+            try:
+                nx.find_cycle(graph, orientation='ignore')
+                execure(then.stmt)
+            except nx.NetworkXNoCycle:
+                pass
+
+# Visualize graph (we use Plotly)
 def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
-    """Vis den opdaterede graf i Plotly med pile til directed graphs, farveforklaringsboks og koordinatsystem."""
     if graph_name not in graph_store:
         print(f"Error: Graph {graph_name} does not exist")
         return
@@ -203,14 +243,14 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
 
     fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, node_trace])
 
-    # **Tilføj vægte på edges**
+    # Add weights to the edges
     for (u, v), weight in edge_labels.items():
         x_mid = (pos[u][0] + pos[v][0]) / 2
         y_mid = (pos[u][1] + pos[v][1]) / 2
         fig.add_annotation(x=x_mid, y=y_mid, text=weight, showarrow=False,
                            font=dict(color="black", size=14, family="Arial"))
 
-    # **Hvis grafen er directed, tilføj pile**
+    # If the graph is directed, then we add arrows to the graph
     if is_directed:
         for u, v in graph.edges():
             x0, y0 = pos[u]
@@ -221,7 +261,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
                 showarrow=True, arrowhead=3, arrowsize=1.5, arrowcolor="black"
             )
 
-    # **Tilføj forklaringsboks**
+    # The box which shows the user what the different colors mean
     existing_annotations = list(fig.layout.annotations) if fig.layout.annotations is not None else []
     legend_annotation = dict(
         text="<span style='color:blue; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
@@ -239,7 +279,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     )
     existing_annotations.append(legend_annotation)
 
-    # **Gør akserne synlige igen (koordinatsystem)**
+    # Coordinatsystem
     fig.update_layout(
         title={"text": f"<span style='font-family:Trebuchet MS; color:black; font-size:22px;'>Visualization of Graph: {graph_name}</span>",
                "x": 0.5, "xanchor": "center"},
