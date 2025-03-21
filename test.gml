@@ -1,4 +1,4 @@
-graph G
+graph G directed
 node A in G
 node B in G
 node C in G

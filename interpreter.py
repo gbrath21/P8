@@ -225,7 +225,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
         elif node in path_nodes:
             node_colors.append("green")
         else:
-            node_colors.append("blue")
+            node_colors.append("#ADD8E6")
 
     # Scatter plots for edges and nodes
     edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=2, color="gray"), hoverinfo='none')
@@ -235,7 +235,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     node_trace = go.Scatter(
         x=node_x, y=node_y, mode='markers+text',
         text=node_text, textposition="top center",
-        marker=dict(size=15, color=node_colors, line=dict(width=2, color="black"))
+        marker=dict(size=20, color=node_colors, line=dict(width=0, color="black"))
     )
     
     mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
@@ -248,7 +248,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
         x_mid = (pos[u][0] + pos[v][0]) / 2
         y_mid = (pos[u][1] + pos[v][1]) / 2
         fig.add_annotation(x=x_mid, y=y_mid, text=weight, showarrow=False,
-                           font=dict(color="black", size=14, family="Arial"))
+                           font=dict(color="black", size=20, family="Arial"))
 
     # If the graph is directed, then we add arrows to the graph
     if is_directed:
@@ -264,7 +264,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     # The box which shows the user what the different colors mean
     existing_annotations = list(fig.layout.annotations) if fig.layout.annotations is not None else []
     legend_annotation = dict(
-        text="<span style='color:blue; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
+        text="<span style='color:#ADD8E6; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
              "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
              "<span style='color:orange; font-weight:bold;'>Orange</span>: Minimum Spanning Tree",
