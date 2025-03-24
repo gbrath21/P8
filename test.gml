@@ -44,6 +44,15 @@ edge A -> C weight 5 in G
 find cycle in G
 visualize G
 
+graph G directed
+node A in G
+node B in G
+node C in G
+edge A -> B in G
+edge B -> C in G
+closure transitive in G
+visualize G
+
 graph G
 node A in G
 node B in G

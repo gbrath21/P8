@@ -4,7 +4,7 @@ import ply.lex as lex
 tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
-    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'SHORTEST', 'IF', 'THEN'
+    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'SHORTEST', 'IF', 'THEN', 'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE'
 )
 
 # KEYWORDS
@@ -28,6 +28,10 @@ t_MST = r'mst'
 t_SHORTEST = r'shortest'
 t_IF = r'if'
 t_THEN = r'then'
+t_CLOSURE = r'closure'
+t_REFLEXIVE = r'reflexive'
+t_SYMMETRIC = r'symmetric'
+t_TRANSITIVE = r'transitive'
 
 # SYMBOLS
 t_ARROW = r'->'
@@ -35,7 +39,7 @@ t_STRING = r'"[^"]*"'
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*' # Regular expression describing variable names (see SPO lec1)
-    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize', 'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load', 'mst'}:
+    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize', 'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load', 'mst', 'closure', 'reflexive', 'symmetric', 'transitive'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 

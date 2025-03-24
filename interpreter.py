@@ -18,9 +18,10 @@ visualize_called = False  # Global variabel til at tracke visualize
 pending_cycles = {}  # Holder cyklusser for grafer
 pending_paths = {}   # Holder korteste stier for grafer
 pending_msts = {} 
+pending_closures = {}
 
 def execute(ast):
-    global visualize_called, pending_cycles, pending_paths, pending_msts
+    global visualize_called, pending_cycles, pending_paths, pending_msts, pending_closures
     
     if ast is None:
         return
@@ -171,9 +172,39 @@ def execute(ast):
                 execure(then.stmt)
             except nx.NetworkXNoCycle:
                 pass
-
+            
+    elif command == 'closure':
+        closure_type, graph_name = ast[1], ast[2]
+        if graph_name not in graph_store:
+            print(f"Error: Graph {graph_name} does not exist")
+            return
+        
+        graph = graph_store[graph_name]
+        edges_to_add = []
+    
+        if closure_type == 'reflexive':
+            for node in graph.nodes():
+                if not graph.has_edge(node, node):
+                    edges_to_add.append((node, node))
+        
+        elif closure_type == 'symmetric':
+            edges_to_add = []
+            for u, v in graph.edges():
+                if not graph.has_edge(v, u):
+                    edges_to_add.append((v, u))
+                                
+        elif closure_type == 'transitive':
+            closure_graph = nx.transitive_closure(graph)
+            for u, v in closure_graph.edges():
+                if not graph.has_edge(u, v):
+                    edges_to_add.append((u, v))
+                    
+        graph.add_edges_from(edges_to_add)
+        pending_closures[graph_name] = edges_to_add
+        print(f"{closure_type.capitalize()} closure applied to {graph_name}. New edges added: {edges_to_add}")
+            
 # Visualize graph (we use Plotly)
-def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
+def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=None):
     if graph_name not in graph_store:
         print(f"Error: Graph {graph_name} does not exist")
         return
@@ -183,10 +214,12 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     pos = nx.spring_layout(graph, seed=42)
 
     edge_x, edge_y, cycle_edge_x, cycle_edge_y, path_edge_x, path_edge_y = [], [], [], [], [], []
+    closure_edge_x, closure_edge_y = [], []
     edge_labels = {}
 
     cycle_edges = set((u, v) for u, v, *_ in cycle) if cycle else set()
     path_edges = set(zip(path, path[1:])) if path else set()
+    closure_edges = set(closure) if closure else set()
     mst_edge_x, mst_edge_y = [], []
     mst_edges = set((u, v) for u, v, _ in mst) if mst else set()
 
@@ -195,11 +228,13 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
         x1, y1 = pos[v]
         weight = str(data.get("weight", 1))
         edge_labels[(u, v)] = weight
-        
-        if (u, v) in mst_edges or (v, u) in mst_edges:
+
+        if (u, v) in closure_edges or (v, u) in closure_edges:
+            closure_edge_x.extend([x0, x1, None])
+            closure_edge_y.extend([y0, y1, None])
+        elif (u, v) in mst_edges or (v, u) in mst_edges:
             mst_edge_x.extend([x0, x1, None])
             mst_edge_y.extend([y0, y1, None])
-
         elif (u, v) in cycle_edges or (v, u) in cycle_edges:
             cycle_edge_x.extend([x0, x1, None])
             cycle_edge_y.extend([y0, y1, None])
@@ -231,26 +266,27 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=2, color="gray"), hoverinfo='none')
     cycle_edge_trace = go.Scatter(x=cycle_edge_x, y=cycle_edge_y, mode='lines', line=dict(width=3, color="red"), hoverinfo='none')
     path_trace = go.Scatter(x=path_edge_x, y=path_edge_y, mode='lines', line=dict(width=4, color="green"), hoverinfo='none')
+    closure_trace = go.Scatter(x=closure_edge_x, y=closure_edge_y, mode='lines', line=dict(width=3, color="purple"), hoverinfo='none')
 
     node_trace = go.Scatter(
         x=node_x, y=node_y, mode='markers+text',
         text=node_text, textposition="top center",
         marker=dict(size=20, color=node_colors, line=dict(width=0, color="black"))
     )
-    
+
     mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
-                        line=dict(width=3, color="orange"), hoverinfo='none')
+                           line=dict(width=3, color="orange"), hoverinfo='none')
 
-    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, node_trace])
+    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, closure_trace, node_trace])
 
-    # Add weights to the edges
+    # **Tilføj vægte på edges**
     for (u, v), weight in edge_labels.items():
         x_mid = (pos[u][0] + pos[v][0]) / 2
         y_mid = (pos[u][1] + pos[v][1]) / 2
         fig.add_annotation(x=x_mid, y=y_mid, text=weight, showarrow=False,
                            font=dict(color="black", size=20, family="Arial"))
 
-    # If the graph is directed, then we add arrows to the graph
+    # **Hvis grafen er directed, tilføj pile**
     if is_directed:
         for u, v in graph.edges():
             x0, y0 = pos[u]
@@ -261,13 +297,14 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
                 showarrow=True, arrowhead=3, arrowsize=1.5, arrowcolor="black"
             )
 
-    # The box which shows the user what the different colors mean
+    # **Tilføj forklaringsboks**
     existing_annotations = list(fig.layout.annotations) if fig.layout.annotations is not None else []
     legend_annotation = dict(
         text="<span style='color:#ADD8E6; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
              "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
-             "<span style='color:orange; font-weight:bold;'>Orange</span>: Minimum Spanning Tree",
+             "<span style='color:orange; font-weight:bold;'>Orange</span>: Minimum Spanning Tree &nbsp;"
+             "<span style='color:purple; font-weight:bold;'>Purple</span>: Closure edges",
         showarrow=False,
         xref="paper", yref="paper",
         x=0.5, y=-0.05, yanchor="top",
@@ -279,21 +316,21 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None):
     )
     existing_annotations.append(legend_annotation)
 
-    # Coordinatsystem
+    # **Gør akserne synlige igen (koordinatsystem)**
     fig.update_layout(
         title={"text": f"<span style='font-family:Trebuchet MS; color:black; font-size:22px;'>Visualization of Graph: {graph_name}</span>",
                "x": 0.5, "xanchor": "center"},
         showlegend=False,
         annotations=existing_annotations,
         xaxis=dict(
-            showgrid=True,   # Grid tilbage
-            zeroline=True,   # Nul-linjer tilbage
-            showticklabels=True  # Akse-ticks tilbage
+            showgrid=True,
+            zeroline=True,
+            showticklabels=True
         ),
         yaxis=dict(
-            showgrid=True,   # Grid tilbage
-            zeroline=True,   # Nul-linjer tilbage
-            showticklabels=True  # Akse-ticks tilbage
+            showgrid=True,
+            zeroline=True,
+            showticklabels=True
         ),
         plot_bgcolor="white"
     )

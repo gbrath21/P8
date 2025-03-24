@@ -77,6 +77,16 @@ def p_statement_if_path(p):
 def p_statement_if_cycle(p):
     'statement : IF FIND CYCLE IN IDENTIFIER THEN statement'
     p[0] = ('if_cycle', p[5], p[7])
+    
+def p_statement_closure(p):
+    'statement : CLOSURE closure_type IN IDENTIFIER'
+    p[0] = ('closure', p[2], p[4])
+
+def p_closure_type(p):
+    '''closure_type : REFLEXIVE
+                    | SYMMETRIC
+                    | TRANSITIVE'''
+    p[0] = p[1]
 
 def p_error(p):
     if p:
