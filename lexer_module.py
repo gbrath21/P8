@@ -39,7 +39,9 @@ t_STRING = r'"[^"]*"'
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*' # Regular expression describing variable names (see SPO lec1)
-    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize', 'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load', 'mst', 'closure', 'reflexive', 'symmetric', 'transitive'}:
+    if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize',
+                    'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load',
+                    'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 

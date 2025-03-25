@@ -5,6 +5,7 @@ import networkx as nx
 import plotly.graph_objects as go
 import plotly.io as pio
 from parser import parser
+import numpy as np
 
 # Gemmer alle grafer
 graph_store = {}
@@ -84,7 +85,7 @@ def execute(ast):
         graph_name = ast[1]
         if graph_name in graph_store:
             try:
-                cycle = list(nx.find_cycle(graph_store[graph_name], orientation='ignore'))
+                cycle = list(nx.find_cycle(graph_store[graph_name], orientation='original'))
                 pending_cycles[graph_name] = cycle  # Gem cyklus til visualize
                 print(f"Cycle found in {graph_name}: {cycle}")
             except nx.NetworkXNoCycle:
@@ -185,7 +186,7 @@ def execute(ast):
         if closure_type == 'reflexive':
             for node in graph.nodes():
                 if not graph.has_edge(node, node):
-                    edges_to_add.append((node, node))
+                    edges_to_add.append((node, node, {"weight": 0}))
         
         elif closure_type == 'symmetric':
             edges_to_add = []
@@ -226,7 +227,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     for u, v, data in graph.edges(data=True):
         x0, y0 = pos[u]
         x1, y1 = pos[v]
-        weight = str(data.get("weight", 1))
+        weight = str(data.get("weight", 0))
         edge_labels[(u, v)] = weight
 
         if (u, v) in closure_edges or (v, u) in closure_edges:
@@ -276,6 +277,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
 
     mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
                            line=dict(width=3, color="orange"), hoverinfo='none')
+    
 
     fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, closure_trace, node_trace])
 
@@ -303,8 +305,8 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         text="<span style='color:#ADD8E6; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
              "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
-             "<span style='color:orange; font-weight:bold;'>Orange</span>: Minimum Spanning Tree &nbsp;"
-             "<span style='color:purple; font-weight:bold;'>Purple</span>: Closure edges",
+             "<span style='color:orange; font-weight:bold;'>Orange</span>: MST &nbsp;",
+             #"<span style='color:purple; font-weight:bold;'>Purple</span>: Closure edges",
         showarrow=False,
         xref="paper", yref="paper",
         x=0.5, y=-0.05, yanchor="top",
