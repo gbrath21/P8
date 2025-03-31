@@ -78,3 +78,16 @@ save graph G to "graph1.gml"
 
 load graph H from "graph1.gml"
 visualize H
+
+graph G directed
+node A in G
+node B in G 
+node C in G 
+node D in G 
+node E in G 
+edge A -> B in G
+edge B -> C in G 
+edge C -> D in G
+edge D -> E in G 
+edge E -> A in G 
+visualize G
