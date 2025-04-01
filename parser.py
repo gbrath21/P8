@@ -87,6 +87,10 @@ def p_closure_type(p):
                     | SYMMETRIC
                     | TRANSITIVE'''
     p[0] = p[1]
+    
+# def p_comment(p):
+#     'statement : COMMENT STRING'
+#     p[0] = ('if_comment', p[1], p[2])
 
 def p_error(p):
     if p:

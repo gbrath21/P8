@@ -50,6 +50,10 @@ def t_NUMBER(t):
     t.value = int(t.value)  # Convert to an int
     return t
 
+def t_comment(t):
+    r'\#.*'
+    pass  # Kommentarer ignoreres
+
 # Ignore space and tab
 t_ignore = ' \t'
 

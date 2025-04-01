@@ -45,6 +45,9 @@ def execute(ast):
                 visualize_interactive(graph_name, path=path, cycle=cycle, mst=mst)
             else:
                 print(f"Error: Graph {graph_name} does not exist")
+                
+    # elif command == 'if_comment':
+    #     continue
     
     # Create graph
     elif command == 'graph':
