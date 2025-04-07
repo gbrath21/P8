@@ -4,7 +4,8 @@ import ply.lex as lex
 tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
-    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'SHORTEST', 'IF', 'THEN', 'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE'
+    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'SHORTEST', 'IF', 'THEN',
+    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'NOT'
 )
 
 # KEYWORDS
@@ -32,6 +33,8 @@ t_CLOSURE = r'closure'
 t_REFLEXIVE = r'reflexive'
 t_SYMMETRIC = r'symmetric'
 t_TRANSITIVE = r'transitive'
+t_LOOP = r'loop'
+t_NOT = r'not'
 
 # SYMBOLS
 t_ARROW = r'->'
@@ -41,7 +44,8 @@ def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*' # Regular expression describing variable names (see SPO lec1)
     if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize',
                     'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load',
-                    'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive'}:
+                    'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive',
+                    'loop', 'not'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 
@@ -52,7 +56,7 @@ def t_NUMBER(t):
 
 def t_comment(t):
     r'\#.*'
-    pass  # Kommentarer ignoreres
+    pass  # Ignore comments #
 
 # Ignore space and tab
 t_ignore = ' \t'

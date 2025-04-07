@@ -54,7 +54,7 @@ class GML_GUI:
     def run_gml_code(self):
         code = self.text_area.get("1.0", tk.END).strip()
         if not code:
-            messagebox.showerror("Error", "Ingen GML-kode fundet.")
+            messagebox.showerror("Error", "Found no GML code.")
             return
         
         try:

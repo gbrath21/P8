@@ -46,9 +46,6 @@ def execute(ast):
             else:
                 print(f"Error: Graph {graph_name} does not exist")
                 
-    # elif command == 'if_comment':
-    #     continue
-    
     # Create graph
     elif command == 'graph':
         graph_name = ast[1]

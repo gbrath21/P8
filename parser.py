@@ -78,6 +78,22 @@ def p_statement_if_cycle(p):
     'statement : IF FIND CYCLE IN IDENTIFIER THEN statement'
     p[0] = ('if_cycle', p[5], p[7])
     
+# def p_statement_if_not_node(p):
+#     'statement : IF NOT NODE IDENTIFIER IN IDENTIFIER THEN statement'
+#     p[0] = ('if_not_node', p[4], p[6], p[8])
+
+# def p_statement_if_not_edge(p):
+#     'statement : IF NOT EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement'
+#     p[0] = ('if_not_edge', p[4], p[6], p[8], p[10])
+
+# def p_statement_if_not_path(p):
+#     'statement : IF NOT PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement'
+#     p[0] = ('if_not_path', p[4], p[6], p[8], p[10])
+
+# def p_statement_if_not_cycle(p):
+#     'statement : IF NOT FIND CYCLE IN IDENTIFIER THEN statement'
+#     p[0] = ('if_not_cycle', p[6], p[8])
+    
 def p_statement_closure(p):
     'statement : CLOSURE closure_type IN IDENTIFIER'
     p[0] = ('closure', p[2], p[4])
@@ -87,10 +103,6 @@ def p_closure_type(p):
                     | SYMMETRIC
                     | TRANSITIVE'''
     p[0] = p[1]
-    
-# def p_comment(p):
-#     'statement : COMMENT STRING'
-#     p[0] = ('if_comment', p[1], p[2])
 
 def p_error(p):
     if p:
