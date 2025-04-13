@@ -103,6 +103,14 @@ def p_closure_type(p):
                     | SYMMETRIC
                     | TRANSITIVE'''
     p[0] = p[1]
+    
+def p_statement_bfs(p):
+    'statement : FIND BFS FROM IDENTIFIER IN IDENTIFIER'
+    p[0] = ('find_bfs', p[4], p[6])
+
+def p_statement_dfs(p):
+    'statement : FIND DFS FROM IDENTIFIER IN IDENTIFIER'
+    p[0] = ('find_dfs', p[4], p[6])
 
 def p_error(p):
     if p:

@@ -91,3 +91,17 @@ edge C -> D in G
 edge D -> E in G 
 edge E -> A in G 
 visualize G
+
+graph G
+node A in G
+node B in G
+node C in G
+node D in G
+node E in G
+edge A -> B in G
+edge A -> C in G
+edge B -> D in G
+edge C -> D in G
+edge D -> E in G
+find bfs from A in G
+visualize G

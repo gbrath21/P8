@@ -7,31 +7,26 @@ import plotly.io as pio
 from parser import parser
 import numpy as np
 
-# Gemmer alle grafer
-graph_store = {}
-
-visualize_called = False  # Global variabel til at tracke visualize
-
-# Gemmer alle grafer
-graph_store = {}
-
-visualize_called = False  # Global variabel til at tracke visualize
-pending_cycles = {}  # Holder cyklusser for grafer
-pending_paths = {}   # Holder korteste stier for grafer
+graph_store = {} #Store all graphs
+visualize_called = False  # Track visualize command
+pending_cycles = {}  # Store cycles for graphs
+pending_paths = {}   # Stores the shortest path for graphs
 pending_msts = {} 
 pending_closures = {}
+pending_bfs = {}
+pending_dfs = {}
 
 def execute(ast):
-    global visualize_called, pending_cycles, pending_paths, pending_msts, pending_closures
+    global visualize_called, pending_cycles, pending_paths, pending_msts, pending_closures, pending_bfs, pending_dfs
     
     if ast is None:
         return
 
     command = ast[0]
     
-    if visualize_called:
-        print("Warning: No commands should be executed after 'visualize'. Ignoring input.")
-        return  # Stop al eksekvering efter visualize
+    # if visualize_called:
+    #     print("Warning: No commands should be executed after 'visualize'. Ignoring input.")
+    #     return  # Stop al eksekvering efter visualize
     
     if command == 'visualize':
         visualize_called = True  # Marker at visualize er kaldt
@@ -42,7 +37,9 @@ def execute(ast):
                 cycle = pending_cycles.pop(graph_name, None)  # Hent og fjern cyklus fra pending
                 path = pending_paths.pop(graph_name, None)  # Hent og fjern path fra pending
                 mst = pending_msts.pop(graph_name, None)
-                visualize_interactive(graph_name, path=path, cycle=cycle, mst=mst)
+                bfs = pending_bfs.pop(graph_name, None)
+                dfs = pending_dfs.pop(graph_name, None)
+                visualize_interactive(graph_name, path=path, cycle=cycle, mst=mst, bfs=bfs, dfs=dfs)
             else:
                 print(f"Error: Graph {graph_name} does not exist")
                 
@@ -173,6 +170,28 @@ def execute(ast):
                 execure(then.stmt)
             except nx.NetworkXNoCycle:
                 pass
+    
+    elif command == 'find_bfs':
+        start_node, graph_name = ast[1], ast[2]
+        graph = graph_store.get(graph_name)
+        if graph and start_node in graph:
+            bfs_nodes = list(nx.bfs_tree(graph, source=start_node).nodes())
+            bfs_edges = list(nx.bfs_edges(graph, source=start_node))
+            pending_bfs[graph_name] = bfs_edges
+            print(f"BFS from {start_node} in {graph_name}: {bfs_nodes}")
+        else:
+            print(f"Error: Node or graph not found")
+            
+    elif command == 'find_dfs':
+        start_node, graph_name = ast[1], ast[2]
+        graph = graph_store.get(graph_name)
+        if graph and start_node in graph:
+            dfs_nodes = list(nx.dfs_tree(graph, source=start_node).nodes())
+            dfs_edges = list(nx.dfs_edges(graph, source=start_node))
+            pending_dfs[graph_name] = dfs_edges
+            print(f"DFS from {start_node} in {graph_name}: {dfs_nodes}")
+        else:
+            print(f"Error: Node or graph not found")
             
     elif command == 'closure':
         closure_type, graph_name = ast[1], ast[2]
@@ -205,7 +224,7 @@ def execute(ast):
         print(f"{closure_type.capitalize()} closure applied to {graph_name}. New edges added: {edges_to_add}")
             
 # Visualize graph (we use Plotly)
-def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=None):
+def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=None, bfs=None, dfs=None):
     if graph_name not in graph_store:
         print(f"Error: Graph {graph_name} does not exist")
         return
@@ -216,6 +235,9 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
 
     edge_x, edge_y, cycle_edge_x, cycle_edge_y, path_edge_x, path_edge_y = [], [], [], [], [], []
     closure_edge_x, closure_edge_y = [], []
+    bfs_edge_x, bfs_edge_y = [], []
+    dfs_edge_x, dfs_edge_y = [], []
+
     edge_labels = {}
 
     cycle_edges = set((u, v) for u, v, *_ in cycle) if cycle else set()
@@ -223,6 +245,9 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     closure_edges = set(closure) if closure else set()
     mst_edge_x, mst_edge_y = [], []
     mst_edges = set((u, v) for u, v, _ in mst) if mst else set()
+    bfs_edges = set(bfs) if bfs else set()
+    dfs_edges = set(dfs) if dfs else set()
+
 
     for u, v, data in graph.edges(data=True):
         x0, y0 = pos[u]
@@ -242,6 +267,12 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         elif (u, v) in path_edges or (v, u) in path_edges:
             path_edge_x.extend([x0, x1, None])
             path_edge_y.extend([y0, y1, None])
+        elif (u,v) in bfs_edges or (v, u) in bfs_edges:
+            bfs_edge_x.extend([x0, x1, None])
+            bfs_edge_y.extend([y0, y1, None])
+        elif (u,v) in dfs_edges or (v,u) in dfs_edges:
+            dfs_edge_x.extend([x0, x1, None])
+            dfs_edge_y.extend([y0, y1, None])
         else:
             edge_x.extend([x0, x1, None])
             edge_y.extend([y0, y1, None])
@@ -278,8 +309,17 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
                            line=dict(width=3, color="orange"), hoverinfo='none')
     
-
-    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, closure_trace, node_trace])
+    bfs_trace = go.Scatter(
+        x=bfs_edge_x, y=bfs_edge_y, mode='lines',
+        line=dict(width=3, color="blue"), hoverinfo='none'
+    )
+    
+    dfs_trace = go.Scatter(
+        x=dfs_edge_x, y=dfs_edge_y, mode='lines',
+        line=dict(width=3, color="magenta"), hoverinfo='none'
+    )
+    
+    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, closure_trace, node_trace, bfs_trace, dfs_trace])
 
     # **Tilføj vægte på edges**
     for (u, v), weight in edge_labels.items():
@@ -305,7 +345,10 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         text="<span style='color:#ADD8E6; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
              "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
-             "<span style='color:orange; font-weight:bold;'>Orange</span>: MST &nbsp;",
+             "<span style='color:orange; font-weight:bold;'>Orange</span>: MST &nbsp;"
+             "<span style='color:blue; font-weight:bold;'>Dark blue</span>: BFS edges &nbsp;&nbsp;"
+             "<span style='color:magenta; font-weight:bold;'>Pink</span>: DFS edges &nbsp;&nbsp;",
+
              #"<span style='color:purple; font-weight:bold;'>Purple</span>: Closure edges",
         showarrow=False,
         xref="paper", yref="paper",
