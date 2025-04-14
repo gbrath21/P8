@@ -5,7 +5,7 @@ tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
     'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'IF', 'THEN',
-    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'BFS', 'DFS', 'ADD', 'OF', 'NOT'
+    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'BFS', 'DFS', 'ADD', 'OF', 'NOT', 'IS', 'GREATER', 'THAN'
 )
 
 # KEYWORDS
@@ -38,6 +38,9 @@ t_DFS = r'dfs'
 t_ADD = r'add'
 t_OF = r'of'
 t_NOT = r'not'
+t_IS = r'is'
+t_GREATER = r'greater'
+t_THAN = r'than'
 
 # SYMBOLS
 t_ARROW = r'->'
@@ -48,7 +51,7 @@ def t_IDENTIFIER(t):
     if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize',
                     'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load',
                     'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive',
-                    'loop', 'bfs', 'dfs', 'not', 'add', 'of'}:
+                    'loop', 'bfs', 'dfs', 'not', 'add', 'of', 'is', 'greater', 'than'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 

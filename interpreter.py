@@ -13,6 +13,7 @@ visualize_called = False
 pending_cycles = {} 
 pending_paths = {}   
 pending_closures = {}
+pending_msts = {}
 pending_bfs = {}
 pending_dfs = {}
 
@@ -252,6 +253,20 @@ def execute(ast):
         graph = graph_store.get(graph_name)
         if graph and not graph.has_edge(node1, node2):
             execute(then_stmt)
+            
+    elif command == 'if_edge_weight':
+        node1, node2, threshold, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4], ast[5]
+        if graph_name in graph_store:
+            graph = graph_store[graph_name]
+            if graph.has_edge(node1, node2):
+                current_weight = graph[node1][node2].get("weight", 0)
+                if current_weight > threshold:
+                    execute(then_stmt)
+            else:
+                print(f"Error: Edge {node1} -> {node2} does not exist in {graph_name}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
+                    
             
     elif command == 'if_path':
         node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]

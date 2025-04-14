@@ -69,6 +69,23 @@ visualize G
 
 
 
+
+graph G directed
+node A in G
+node B in G
+node C in G
+edge A -> B weight 6 in G
+edge B -> C weight 4 in G
+edge C -> A weight 7 in G
+
+loop edge U -> V in G
+    if weight of edge U -> V is greater than 5 in G then add 1 to weight of edge U -> V in G
+
+visualize G
+
+
+
+
 graph G
 node A in G
 node B in G
