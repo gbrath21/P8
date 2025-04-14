@@ -7,11 +7,11 @@ import plotly.io as pio
 from parser import parser
 import numpy as np
 
-graph_store = {} #Store all graphs
-visualize_called = False  # Track visualize command
-pending_cycles = {}  # Store cycles for graphs
-pending_paths = {}   # Stores the shortest path for graphs
-pending_msts = {} 
+# Stores graphs etc.
+graph_store = {}
+visualize_called = False 
+pending_cycles = {} 
+pending_paths = {}   
 pending_closures = {}
 pending_bfs = {}
 pending_dfs = {}
@@ -294,6 +294,28 @@ def execute(ast):
             print(f"DFS from {start_node} in {graph_name}: {dfs_nodes}")
         else:
             print(f"Error: Node or graph not found")
+            
+    elif command == 'save_graph':
+        graph_name, filename = ast[1], ast[2]
+        if graph_name in graph_store:
+            try:
+                with open(filename, "wb") as f:
+                    pickle.dump(graph_store[graph_name], f)
+                    print(f"Graph {graph_name} saved to {filename}")
+            except Exception as e:
+                print(f"Error saving graph {graph_name} to {filename}: {e}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
+    
+    elif command == 'load_graph':
+        graph_name, filename = ast[1], ast[2]
+        try:
+            with open(filename, "rb") as f:
+                loaded_graph = pickle.load(f)
+                graph_store[graph_name] = loaded_graph
+                print(f"Graph {graph_name} loaded from {filename}")
+        except Exception as e:
+            print(f"Error loading graph {graph_name} from {filename}: {e}")
             
     elif command == 'closure':
         closure_type, graph_name = ast[1], ast[2]

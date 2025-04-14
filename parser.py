@@ -38,17 +38,9 @@ def p_statement_color_node(p):
     'statement : COLOR NODE IDENTIFIER STRING'
     p[0] = ('color_node', p[3], p[4])
 
-def p_statement_color_edge(p):
-    'statement : COLOR EDGE IDENTIFIER ARROW IDENTIFIER STRING'
-    p[0] = ('color_edge', p[3], p[5], p[6])
-
 def p_statement_delete_node(p):
     'statement : DELETE1 NODE IDENTIFIER FROM IDENTIFIER'
     p[0] = ('delete1_node', p[3], p[5])
-
-def p_statement_delete_edge(p):
-    'statement : DELETE1 EDGE IDENTIFIER ARROW IDENTIFIER FROM IDENTIFIER'
-    p[0] = ('delete1_edge', p[3], p[5], p[7])
 
 def p_statement_save_graph(p):
     'statement : SAVE GRAPH IDENTIFIER TO STRING'
