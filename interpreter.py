@@ -16,6 +16,14 @@ pending_closures = {}
 pending_bfs = {}
 pending_dfs = {}
 
+def replace_identifier(ast, old, new):
+    if isinstance(ast, tuple):
+        return tuple(replace_identifier(elem, old, new) for elem in ast)
+    elif isinstance(ast, str):
+        return new if ast == old else ast
+    else:
+        return ast
+
 def execute(ast):
     global visualize_called, pending_cycles, pending_paths, pending_msts, pending_closures, pending_bfs, pending_dfs
     
@@ -150,6 +158,38 @@ def execute(ast):
         graph = graph_store.get(graph_name)
         if graph and graph.has_edge(node1, node2):
             exectute(then.stmt)
+            
+    elif command == 'color_node':
+        node_name, color = ast[1], ast[2].strip('"')
+        for graph in graph_store.values():
+            if node_name in graph.nodes:
+                graph.nodes[node_name]['color'] = color
+                print(f"Colored node {node_name} with \"{color}\"")
+        
+    elif command == 'loop_node':
+        var_name, graph_name, inner_statements = ast[1], ast[2], ast[3]
+        graph = graph_store.get(graph_name)
+        if graph:
+            for node in graph.nodes():
+                for stmt in inner_statements:
+                    replaced_stmt = replace_identifier(stmt, var_name, node)
+                    execute(replaced_stmt)
+                    
+    elif command == 'loop_edge':
+        var1, var2, graph_name, inner_statements = ast[1], ast[2], ast[3], ast[4]
+        graph = graph_store.get(graph_name)
+        if graph:
+            for u, v in graph.edges():
+                for stmt in inner_statements:
+                    replaced_stmt = replace_identifier(stmt, var1, u)
+                    replaced_stmt = replace_identifier(replaced_stmt, var2, v)
+                    execute(replaced_stmt)
+                    
+    elif command == 'if_not_edge':
+        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+        graph = graph_store.get(graph_name)
+        if graph and not graph.has_edge(node1, node2):
+            execute(then_stmt)
             
     elif command == 'if_path':
         node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
@@ -287,12 +327,15 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         node_y.append(y)
         node_text.append(node)
 
-        if node in cycle_nodes:
+        color = graph.nodes[node].get("color")
+        if color:
+            node_colors.append(color)
+        elif node in cycle_nodes:
             node_colors.append("red")
         elif node in path_nodes:
             node_colors.append("green")
         else:
-            node_colors.append("#ADD8E6")
+            node_colors.append("#4ad3ff")
 
     # Scatter plots for edges and nodes
     edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=2, color="gray"), hoverinfo='none')
@@ -342,7 +385,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     # **Tilføj forklaringsboks**
     existing_annotations = list(fig.layout.annotations) if fig.layout.annotations is not None else []
     legend_annotation = dict(
-        text="<span style='color:#ADD8E6; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
+        text="<span style='color:#4ad3ff; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
              "<span style='color:green; font-weight:bold;'>Green</span>: Shortest path &nbsp;&nbsp;"
              "<span style='color:red; font-weight:bold;'>Red</span>: Cycles &nbsp;"
              "<span style='color:orange; font-weight:bold;'>Orange</span>: MST &nbsp;"
@@ -391,6 +434,38 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
 
 def run_gml(code):
     lines = code.strip().split("\n")
-    for line in lines:
-        ast = parser.parse(line)
-        execute(ast)
+    i = 0
+    while i < len(lines):
+        line = lines[i].rstrip()
+
+        if not line.strip():
+            i += 1
+            continue
+
+        if line.strip().startswith("loop"):
+            loop_header = line.strip()
+            loop_indent = len(line) - len(line.lstrip())
+            block_lines = []
+            i += 1
+
+            while i < len(lines):
+                block_line = lines[i]
+                indent = len(block_line) - len(block_line.lstrip())
+                if not block_line.strip() or indent <= loop_indent:
+                    break
+                block_lines.append(block_line)
+                i += 1
+
+            full_block = loop_header + "\n" + "\n".join(block_lines)
+            try:
+                ast = parser.parse(full_block)
+                execute(ast)
+            except Exception as e:
+                print(f"Parse error in loop block: {e}")
+        else:
+            try:
+                ast = parser.parse(line.strip())
+                execute(ast)
+            except Exception as e:
+                print(f"Parse error: {e}")
+            i += 1

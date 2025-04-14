@@ -78,21 +78,21 @@ def p_statement_if_cycle(p):
     'statement : IF FIND CYCLE IN IDENTIFIER THEN statement'
     p[0] = ('if_cycle', p[5], p[7])
     
-# def p_statement_if_not_node(p):
-#     'statement : IF NOT NODE IDENTIFIER IN IDENTIFIER THEN statement'
-#     p[0] = ('if_not_node', p[4], p[6], p[8])
+def p_statement_if_not_node(p):
+    'statement : IF NOT NODE IDENTIFIER IN IDENTIFIER THEN statement'
+    p[0] = ('if_not_node', p[4], p[6], p[8])
 
-# def p_statement_if_not_edge(p):
-#     'statement : IF NOT EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement'
-#     p[0] = ('if_not_edge', p[4], p[6], p[8], p[10])
+def p_statement_if_not_edge(p):
+    'statement : IF NOT EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER THEN statement'
+    p[0] = ('if_not_edge', p[4], p[6], p[8], p[10])
 
-# def p_statement_if_not_path(p):
-#     'statement : IF NOT PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement'
-#     p[0] = ('if_not_path', p[4], p[6], p[8], p[10])
+def p_statement_if_not_path(p):
+    'statement : IF NOT PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER THEN statement'
+    p[0] = ('if_not_path', p[4], p[6], p[8], p[10])
 
-# def p_statement_if_not_cycle(p):
-#     'statement : IF NOT FIND CYCLE IN IDENTIFIER THEN statement'
-#     p[0] = ('if_not_cycle', p[6], p[8])
+def p_statement_if_not_cycle(p):
+    'statement : IF NOT FIND CYCLE IN IDENTIFIER THEN statement'
+    p[0] = ('if_not_cycle', p[6], p[8])
     
 def p_statement_closure(p):
     'statement : CLOSURE closure_type IN IDENTIFIER'
@@ -111,6 +111,38 @@ def p_statement_bfs(p):
 def p_statement_dfs(p):
     'statement : FIND DFS FROM IDENTIFIER IN IDENTIFIER'
     p[0] = ('find_dfs', p[4], p[6])
+    
+def p_statement_node(p):
+    'statement : NODE IDENTIFIER IN IDENTIFIER'
+    p[0] = ('node', p[2], p[4])
+
+def p_statement_graph(p):
+    'statement : GRAPH IDENTIFIER'
+    p[0] = ('graph', p[2])
+
+def p_statement_color_node(p):
+    'statement : COLOR NODE IDENTIFIER STRING'
+    p[0] = ('color_node', p[3], p[4])
+
+def p_statement_visualize(p):
+    'statement : VISUALIZE IDENTIFIER'
+    p[0] = ('visualize', p[2])
+
+def p_statement_loop_node(p):
+    'statement : LOOP NODE IDENTIFIER IN IDENTIFIER block'
+    p[0] = ('loop_node', p[3], p[5], p[6])
+
+def p_statement_loop_edge(p):
+    'statement : LOOP EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER block'
+    p[0] = ('loop_edge', p[3], p[5], p[7], p[8])
+
+def p_block_multiple(p):
+    'block : statement block'
+    p[0] = [p[1]] + p[2]
+
+def p_block_single(p):
+    'block : statement'
+    p[0] = [p[1]]
 
 def p_error(p):
     if p:

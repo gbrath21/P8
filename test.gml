@@ -24,6 +24,16 @@ node C in G
 if node A in G then delete1 node A from G
 visualize G
 
+graph G
+node A in G
+node B in G
+node C in G
+
+loop node N in G
+    color node N "red"
+
+visualize G
+
 graph G directed
 node A in G
 node B in G
@@ -104,4 +114,16 @@ edge B -> D in G
 edge C -> D in G
 edge D -> E in G
 find bfs from A in G
+visualize G
+
+graph G
+node A in G
+node B in G
+node C in G
+edge A -> B in G
+edge B -> C in G
+
+loop edge U -> V in G
+    if not edge V -> U in G then edge V -> U in G
+
 visualize G
