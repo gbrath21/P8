@@ -19,10 +19,12 @@ pending_dfs = {}
 def replace_identifier(ast, old, new):
     if isinstance(ast, tuple):
         return tuple(replace_identifier(elem, old, new) for elem in ast)
+    elif isinstance(ast, list):
+        return [replace_identifier(elem, old, new) for elem in ast]
     elif isinstance(ast, str):
         return new if ast == old else ast
     else:
-        return ast
+        return ast  # fx int, float
 
 def execute(ast):
     global visualize_called, pending_cycles, pending_paths, pending_msts, pending_closures, pending_bfs, pending_dfs
@@ -183,7 +185,67 @@ def execute(ast):
                 for stmt in inner_statements:
                     replaced_stmt = replace_identifier(stmt, var1, u)
                     replaced_stmt = replace_identifier(replaced_stmt, var2, v)
+                    print(f"Replacing U={u}, V={v}")
+                    print("Before:", stmt)
+                    print("After:", replaced_stmt)
                     execute(replaced_stmt)
+    
+    elif command == 'loop_graph_range':
+        var, start, end, graph_name, block = ast[1], ast[2], ast[3], ast[4], ast[5]
+        graph = graph_store.get(graph_name)
+        if not graph:
+            print(f"Error: Graph {graph_name} does not exist")
+            return
+        nodes = list(graph.nodes())
+        for i in range(start - 1, min(end, len(nodes))):
+            current_node = nodes[i]
+            for stmt in block:
+                replaced_stmt = replace_identifier(stmt, var, current_node)
+                execute(replaced_stmt)
+                
+    elif command == 'loop_edge_range':
+        u_var, v_var, start, end, graph_name, block = ast[1], ast[2], ast[3], ast[4], ast[5], ast[6]
+        graph = graph_store.get(graph_name)
+        if not graph:
+            print(f"Error: Graph {graph_name} does not exist")
+            return
+        edges = list(graph.edges())
+        for i in range(start - 1, min(end, len(edges))):
+            u, v = edges[i]
+            for stmt in block:
+                stmt_replaced = replace_identifier(stmt, u_var, u)
+                stmt_replaced = replace_identifier(stmt_replaced, v_var, v)
+                execute(stmt_replaced)
+                
+    elif command == 'loop_times':
+        start, end, block = ast[1], ast[2], ast[3]
+        for _ in range(start, end + 1):
+            for stmt in block:
+                execute(stmt)
+                
+    elif command == 'add_weight':
+        amount, node1, node2, graph_name = ast[1], ast[2], ast[3], ast[4]
+        if graph_name in graph_store:
+            graph = graph_store[graph_name]
+            if graph.has_edge(node1, node2):
+                current_weight = graph[node1][node2].get('weight', 0)
+                new_weight = current_weight + amount
+                graph[node1][node2]['weight'] = new_weight
+                print(f"Updated weight of edge {node1} -> {node2} in {graph_name}: {current_weight} -> {new_weight}")
+            else:
+                print(f"Error: Edge {node1} -> {node2} does not exist in {graph_name}")
+        else:
+            print(f"Error: Graph {graph_name} does not exist")
+                
+    elif command == 'add_to_weight':
+        amount, u, v = ast[1], ast[2], ast[3]
+        for graph in graph_store.values():
+            if graph.has_edge(u, v):
+                current_weight = graph[u][v].get("weight", 0)
+                graph[u][v]["weight"] = current_weight + amount
+                print(f"Updated weight on edge {u} -> {v} to {current_weight + amount}")
+            else:
+                print(f"Edge {u} -> {v} not found")
                     
     elif command == 'if_not_edge':
         node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
@@ -442,8 +504,9 @@ def run_gml(code):
             i += 1
             continue
 
+        # Find alle typer af loops
         if line.strip().startswith("loop"):
-            loop_header = line.strip()
+            loop_header = line
             loop_indent = len(line) - len(line.lstrip())
             block_lines = []
             i += 1

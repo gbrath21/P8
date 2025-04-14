@@ -4,8 +4,8 @@ import ply.lex as lex
 tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
-    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'SHORTEST', 'IF', 'THEN',
-    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'NOT', 'BFS', 'DFS'
+    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'IF', 'THEN',
+    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'BFS', 'DFS', 'ADD', 'OF', 'NOT'
 )
 
 # KEYWORDS
@@ -26,7 +26,6 @@ t_DIRECTED = r'directed'
 t_SAVE = r'save'
 t_LOAD = r'load'
 t_MST = r'mst'
-t_SHORTEST = r'shortest'
 t_IF = r'if'
 t_THEN = r'then'
 t_CLOSURE = r'closure'
@@ -34,9 +33,11 @@ t_REFLEXIVE = r'reflexive'
 t_SYMMETRIC = r'symmetric'
 t_TRANSITIVE = r'transitive'
 t_LOOP = r'loop'
-t_NOT = r'not'
 t_BFS = r'bfs'
 t_DFS = r'dfs'
+t_ADD = r'add'
+t_OF = r'of'
+t_NOT = r'not'
 
 # SYMBOLS
 t_ARROW = r'->'
@@ -47,7 +48,7 @@ def t_IDENTIFIER(t):
     if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize',
                     'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load',
                     'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive',
-                    'loop', 'not', 'bfs', 'dfs'}:
+                    'loop', 'bfs', 'dfs', 'not', 'add', 'of'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 

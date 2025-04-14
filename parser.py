@@ -111,22 +111,6 @@ def p_statement_bfs(p):
 def p_statement_dfs(p):
     'statement : FIND DFS FROM IDENTIFIER IN IDENTIFIER'
     p[0] = ('find_dfs', p[4], p[6])
-    
-def p_statement_node(p):
-    'statement : NODE IDENTIFIER IN IDENTIFIER'
-    p[0] = ('node', p[2], p[4])
-
-def p_statement_graph(p):
-    'statement : GRAPH IDENTIFIER'
-    p[0] = ('graph', p[2])
-
-def p_statement_color_node(p):
-    'statement : COLOR NODE IDENTIFIER STRING'
-    p[0] = ('color_node', p[3], p[4])
-
-def p_statement_visualize(p):
-    'statement : VISUALIZE IDENTIFIER'
-    p[0] = ('visualize', p[2])
 
 def p_statement_loop_node(p):
     'statement : LOOP NODE IDENTIFIER IN IDENTIFIER block'
@@ -135,6 +119,23 @@ def p_statement_loop_node(p):
 def p_statement_loop_edge(p):
     'statement : LOOP EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER block'
     p[0] = ('loop_edge', p[3], p[5], p[7], p[8])
+    
+def p_statement_loop_times(p): #loop x antal gange
+    'statement : LOOP FROM NUMBER TO NUMBER block'
+    p[0] = ('loop_times', p[3], p[5], p[6])
+
+def p_statement_loop_from_to_in_graph(p):
+    'statement : LOOP IDENTIFIER FROM NUMBER TO NUMBER IN IDENTIFIER block'
+    p[0] = ('loop_graph_range', p[2], p[4], p[6], p[8], p[9])  # var, from, to, graph, block
+    
+def p_statement_loop_edge_from_to_in_graph(p):
+    'statement : LOOP EDGE IDENTIFIER ARROW IDENTIFIER FROM NUMBER TO NUMBER IN IDENTIFIER block'
+    p[0] = ('loop_edge_range', p[3], p[5], p[7], p[9], p[11], p[12])  
+    # u_var, v_var, from, to, graph, block
+
+def p_statement_add_weight(p):
+    'statement : ADD NUMBER TO WEIGHT OF EDGE IDENTIFIER ARROW IDENTIFIER IN IDENTIFIER'
+    p[0] = ('add_weight', p[2], p[7], p[9], p[11])
 
 def p_block_multiple(p):
     'block : statement block'
