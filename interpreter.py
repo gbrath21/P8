@@ -387,7 +387,6 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     bfs_edges = set(bfs) if bfs else set()
     dfs_edges = set(dfs) if dfs else set()
 
-
     for u, v, data in graph.edges(data=True):
         x0, y0 = pos[u]
         x1, y1 = pos[v]
@@ -409,7 +408,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         elif (u,v) in bfs_edges or (v, u) in bfs_edges:
             bfs_edge_x.extend([x0, x1, None])
             bfs_edge_y.extend([y0, y1, None])
-        elif (u,v) in dfs_edges or (v,u) in dfs_edges:
+        elif (u,v) in dfs_edges or (v, u) in dfs_edges:
             dfs_edge_x.extend([x0, x1, None])
             dfs_edge_y.extend([y0, y1, None])
         else:
@@ -425,7 +424,6 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         node_x.append(x)
         node_y.append(y)
         node_text.append(node)
-
         color = graph.nodes[node].get("color")
         if color:
             node_colors.append(color)
@@ -436,41 +434,41 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         else:
             node_colors.append("#4ad3ff")
 
-    # Scatter plots for edges and nodes
-    edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines', line=dict(width=2, color="gray"), hoverinfo='none')
-    cycle_edge_trace = go.Scatter(x=cycle_edge_x, y=cycle_edge_y, mode='lines', line=dict(width=3, color="red"), hoverinfo='none')
-    path_trace = go.Scatter(x=path_edge_x, y=path_edge_y, mode='lines', line=dict(width=4, color="green"), hoverinfo='none')
-    closure_trace = go.Scatter(x=closure_edge_x, y=closure_edge_y, mode='lines', line=dict(width=3, color="purple"), hoverinfo='none')
-
-    node_trace = go.Scatter(
-        x=node_x, y=node_y, mode='markers+text',
-        text=node_text, textposition="top center",
-        marker=dict(size=20, color=node_colors, line=dict(width=0, color="black"))
-    )
-
+    edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines',
+                            line=dict(width=2, color="gray"), hoverinfo='none')
+    cycle_edge_trace = go.Scatter(x=cycle_edge_x, y=cycle_edge_y, mode='lines',
+                                  line=dict(width=3, color="red"), hoverinfo='none')
+    path_trace = go.Scatter(x=path_edge_x, y=path_edge_y, mode='lines',
+                            line=dict(width=4, color="green"), hoverinfo='none')
+    closure_trace = go.Scatter(x=closure_edge_x, y=closure_edge_y, mode='lines',
+                               line=dict(width=3, color="purple"), hoverinfo='none')
+    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers+text',
+                            text=node_text, textposition="top center",
+                            marker=dict(size=25, color=node_colors, line=dict(width=0, color="black")))
     mst_trace = go.Scatter(x=mst_edge_x, y=mst_edge_y, mode='lines',
                            line=dict(width=3, color="orange"), hoverinfo='none')
-    
-    bfs_trace = go.Scatter(
-        x=bfs_edge_x, y=bfs_edge_y, mode='lines',
-        line=dict(width=3, color="blue"), hoverinfo='none'
-    )
-    
-    dfs_trace = go.Scatter(
-        x=dfs_edge_x, y=dfs_edge_y, mode='lines',
-        line=dict(width=3, color="magenta"), hoverinfo='none'
-    )
-    
-    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace, closure_trace, node_trace, bfs_trace, dfs_trace])
+    bfs_trace = go.Scatter(x=bfs_edge_x, y=bfs_edge_y, mode='lines',
+                           line=dict(width=3, color="blue"), hoverinfo='none')
+    dfs_trace = go.Scatter(x=dfs_edge_x, y=dfs_edge_y, mode='lines',
+                           line=dict(width=3, color="magenta"), hoverinfo='none')
 
-    # **Tilføj vægte på edges**
+    fig = go.Figure(data=[edge_trace, cycle_edge_trace, path_trace, mst_trace,
+                           closure_trace, node_trace, bfs_trace, dfs_trace])
+
+    # Tilføj vægt-annotationer lige over kanterne
     for (u, v), weight in edge_labels.items():
         x_mid = (pos[u][0] + pos[v][0]) / 2
         y_mid = (pos[u][1] + pos[v][1]) / 2
-        fig.add_annotation(x=x_mid, y=y_mid, text=weight, showarrow=False,
-                           font=dict(color="black", size=20, family="Arial"))
+        fig.add_annotation(
+            x=x_mid,
+            y=y_mid,
+            text=weight,
+            showarrow=False,
+            font=dict(family="Trebuchet MS", size=14, color="black"),
+            xanchor='center', yanchor='bottom',
+            yshift=10  # Skubber teksten opad, så den vises lige over kanten
+        )
 
-    # **Hvis grafen er directed, tilføj pile**
     if is_directed:
         for u, v in graph.edges():
             x0, y0 = pos[u]
@@ -478,10 +476,39 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
             fig.add_annotation(
                 ax=x0, ay=y0, x=x1, y=y1,
                 xref="x", yref="y", axref="x", ayref="y",
-                showarrow=True, arrowhead=3, arrowsize=1.5, arrowcolor="black"
+                showarrow=True, arrowhead=4, arrowsize=3, arrowcolor="black"
             )
 
-    # **Tilføj forklaringsboks**
+    # Opret en informationsboks, der forklarer algoritmeresultaterne
+    algorithm_text = ""
+    if path is not None:
+        algorithm_text += f"<b>Shortest path:</b> {path}<br>"
+    if cycle is not None:
+        algorithm_text += f"<b>Cycle:</b> {cycle}<br>"
+    if mst is not None:
+        algorithm_text += f"<b>MST:</b> {list(mst)}<br>"
+    if bfs is not None:
+        algorithm_text += f"<b>BFS:</b> {bfs}<br>"
+    if dfs is not None:
+        algorithm_text += f"<b>DFS:</b> {dfs}<br>"
+
+    # Hvis der findes algoritmeresultater, tilføj en information-boks i figuren.
+    if algorithm_text:
+        fig.add_annotation(
+            xref="paper",
+            yref="paper",
+            x=0.98, 
+            y=0.98,
+            xanchor="right",
+            yanchor="top",
+            text=algorithm_text,
+            showarrow=False,
+            bordercolor="#444",
+            borderwidth=2,
+            bgcolor="rgba(255,255,255,0.9)",
+            font=dict(family="Trebuchet MS", size=13, color="#333")
+        )
+
     existing_annotations = list(fig.layout.annotations) if fig.layout.annotations is not None else []
     legend_annotation = dict(
         text="<span style='color:#4ad3ff; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
@@ -490,8 +517,6 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
              "<span style='color:orange; font-weight:bold;'>Orange</span>: MST &nbsp;"
              "<span style='color:blue; font-weight:bold;'>Dark blue</span>: BFS edges &nbsp;&nbsp;"
              "<span style='color:magenta; font-weight:bold;'>Pink</span>: DFS edges &nbsp;&nbsp;",
-
-             #"<span style='color:purple; font-weight:bold;'>Purple</span>: Closure edges",
         showarrow=False,
         xref="paper", yref="paper",
         x=0.5, y=-0.05, yanchor="top",
@@ -503,22 +528,13 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
     )
     existing_annotations.append(legend_annotation)
 
-    # **Gør akserne synlige igen (koordinatsystem)**
     fig.update_layout(
         title={"text": f"<span style='font-family:Trebuchet MS; color:black; font-size:22px;'>Visualization of Graph: {graph_name}</span>",
                "x": 0.5, "xanchor": "center"},
         showlegend=False,
         annotations=existing_annotations,
-        xaxis=dict(
-            showgrid=True,
-            zeroline=True,
-            showticklabels=True
-        ),
-        yaxis=dict(
-            showgrid=True,
-            zeroline=True,
-            showticklabels=True
-        ),
+        xaxis=dict(showgrid=True, zeroline=True, showticklabels=True),
+        yaxis=dict(showgrid=True, zeroline=True, showticklabels=True),
         plot_bgcolor="white"
     )
 
