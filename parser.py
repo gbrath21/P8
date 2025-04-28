@@ -33,7 +33,19 @@ def p_statement_find_cycle(p):
 def p_statement_shortest_path(p):
     'statement : FIND PATH IDENTIFIER TO IDENTIFIER IN IDENTIFIER'
     p[0] = ('shortest_path', p[3], p[5], p[7])
+
+def p_statement_bfs(p):
+    'statement : FIND BFS FROM IDENTIFIER IN IDENTIFIER'
+    p[0] = ('find_bfs', p[4], p[6])
+
+def p_statement_dfs(p):
+    'statement : FIND DFS FROM IDENTIFIER IN IDENTIFIER'
+    p[0] = ('find_dfs', p[4], p[6])
     
+def p_statement_find_mst(p):
+    'statement : FIND MST IN IDENTIFIER'
+    p[0] = ('find_mst', p[4])
+
 def p_statement_color_node(p):
     'statement : COLOR NODE IDENTIFIER STRING'
     p[0] = ('color_node', p[3], p[4])
@@ -50,10 +62,6 @@ def p_statement_load_graph(p):
     'statement : LOAD GRAPH IDENTIFIER FROM STRING'
     p[0] = ('load_graph', p[3], p[5].strip('"'))
     
-def p_statement_find_mst(p):
-    'statement : FIND MST IN IDENTIFIER'
-    p[0] = ('find_mst', p[4])
-
 def p_statement_if_node(p):
     'statement : IF NODE IDENTIFIER IN IDENTIFIER THEN statement'
     p[0] = ('if_node', p[3], p[5], p[7])
@@ -74,8 +82,6 @@ def p_statement_if_edge_weight(p):
     '''statement : IF WEIGHT OF EDGE IDENTIFIER ARROW IDENTIFIER IS GREATER THAN NUMBER IN IDENTIFIER THEN statement'''
     p[0] = ('if_edge_weight', p[5], p[7], p[11], p[13], p[15])
 
-
-    
 def p_statement_if_not_node(p):
     'statement : IF NOT NODE IDENTIFIER IN IDENTIFIER THEN statement'
     p[0] = ('if_not_node', p[4], p[6], p[8])
@@ -101,14 +107,6 @@ def p_closure_type(p):
                     | SYMMETRIC
                     | TRANSITIVE'''
     p[0] = p[1]
-    
-def p_statement_bfs(p):
-    'statement : FIND BFS FROM IDENTIFIER IN IDENTIFIER'
-    p[0] = ('find_bfs', p[4], p[6])
-
-def p_statement_dfs(p):
-    'statement : FIND DFS FROM IDENTIFIER IN IDENTIFIER'
-    p[0] = ('find_dfs', p[4], p[6])
 
 def p_statement_loop_node(p):
     'statement : LOOP NODE IDENTIFIER IN IDENTIFIER block'

@@ -160,7 +160,7 @@ def execute(ast):
         node, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
         graph = graph_store.get(graph_name)
         if graph and graph.has_edge(node1, node2):
-            exectute(then.stmt)
+            execute(then.stmt)
             
     elif command == 'color_node':
         node_name, color = ast[1], ast[2].strip('"')
@@ -274,7 +274,7 @@ def execute(ast):
         if graph:
             try:
                 nx.shortest_path(graph, source=node1, target=node2)
-                executre(then.stmt)
+                execute(then.stmt)
             except nx.NetworkXNoPath:
                 pass
     
@@ -284,7 +284,7 @@ def execute(ast):
         if graph:
             try:
                 nx.find_cycle(graph, orientation='ignore')
-                execure(then.stmt)
+                execute(then.stmt)
             except nx.NetworkXNoCycle:
                 pass
     
