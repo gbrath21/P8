@@ -1,7 +1,7 @@
 import sys
 import tkinter as tk
 from gui import GML_GUI
-from interpreter import run_gml  # Brug den forbedrede version
+from interpreter import run_gml
 
 def run_gml_file(filename):
     with open(filename, "r") as file:

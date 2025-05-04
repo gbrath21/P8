@@ -2,6 +2,15 @@ import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
 from PIL import Image, ImageTk
 from interpreter import run_gml
+import sys
+import os
+
+def resource_path(filename):
+    # Kørsel fra PyInstaller (.app eller .exe)
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filename)
+    # Kørsel direkte fra kildekode
+    return os.path.join(os.path.dirname(__file__), filename)
 
 class GML_GUI:
     def __init__(self, root):
@@ -11,8 +20,7 @@ class GML_GUI:
         self.root.configure(bg="white")
 
         # Logo
-        logo_path = "GML logo.png"
-        image = Image.open(logo_path)
+        image = Image.open(resource_path("GMLlogo.png"))
         try:
             resample = Image.Resampling.LANCZOS
         except AttributeError:
