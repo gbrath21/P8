@@ -361,7 +361,15 @@ def execute(ast):
         graph.add_edges_from(edges_to_add)
         pending_closures[graph_name] = edges_to_add
         print(f"{closure_type.capitalize()} closure applied to {graph_name}. New edges added: {edges_to_add}")
-            
+
+import base64
+from io import BytesIO
+
+def encode_image_base64(path):
+    with open(path, "rb") as image_file:
+        encoded = base64.b64encode(image_file.read()).decode("utf-8")
+        return encoded
+
 # Visualize graph (we use Plotly)
 def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=None, bfs=None, dfs=None):
     if graph_name not in graph_store:
@@ -527,7 +535,7 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
         bgcolor="white"
     )
     existing_annotations.append(legend_annotation)
-
+    
     fig.update_layout(
         title={"text": f"<span style='font-family:Trebuchet MS; color:black; font-size:22px;'>Visualization of Graph: {graph_name}</span>",
                "x": 0.5, "xanchor": "center"},
@@ -540,6 +548,23 @@ def visualize_interactive(graph_name, path=None, cycle=None, mst=None, closure=N
 
     filename = os.path.abspath("graph_visualization.html")
     pio.write_html(fig, filename)
+    insert_logo_in_html(filename, "GML logo.png")
+    
+def insert_logo_in_html(filename, logo_path):
+    with open(filename, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    logo_base64 = encode_image_base64(logo_path)
+    logo_html = f"""
+    <div style="position:fixed; top:10px; left:10px; z-index:1000;">
+        <img src="data:image/png;base64,{logo_base64}" alt="GML Logo" style="height:70px;">
+    </div>
+    """
+
+    html = html.replace("<body>", f"<body>\n{logo_html}")
+
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(html)
 
     try:
         webbrowser.open(f"file://{filename}", new=2)
