@@ -53806,6 +53806,7 @@
   ('uuid',
    '/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/uuid.py',
    'PYMODULE'),
+  ('visualization', '/Users/ulrikkedamgaard/P8/visualization.py', 'PYMODULE'),
   ('wave',
    '/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/wave.py',
    'PYMODULE'),

@@ -1362,7 +1362,7 @@
 		</data>
 		<key>Resources/base_library.zip</key>
 		<data>
-		F2OIEwkTgMeOQk5hjoApbL4XVHc=
+		3kK0sN+k2oHX7wAtCLQLagUPjWw=
 		</data>
 		<key>Resources/certifi/cacert.pem</key>
 		<data>
@@ -1375,10 +1375,6 @@
 		<key>Resources/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz</key>
 		<data>
 		c+JCO8FU6iR/UDl+lpaYpwphJ6s=
-		</data>
-		<key>Resources/interpreter.py</key>
-		<data>
-		qtj5rw0fak8zuycSVElOJPnTI5s=
 		</data>
 		<key>Resources/jedi/third_party/django-stubs/LICENSE.txt</key>
 		<data>
@@ -12467,11 +12463,6 @@
 			<key>symlink</key>
 			<string>../Resources/dateutil</string>
 		</dict>
-		<key>Frameworks/interpreter.py</key>
-		<dict>
-			<key>symlink</key>
-			<string>../Resources/interpreter.py</string>
-		</dict>
 		<key>Frameworks/jedi</key>
 		<dict>
 			<key>symlink</key>
@@ -17089,7 +17080,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UyBuMjAZVvdRsnbT/jE98d0ORXiXFVg7wWWNJZRyOIw=
+			2VKPid/OTV4lw2zA9l6RwYWAJ85+jW3DM3q06euXIJ4=
 			</data>
 		</dict>
 		<key>Resources/certifi/cacert.pem</key>
@@ -17121,13 +17112,6 @@
 			<key>hash2</key>
 			<data>
 			0+pS57bpaN4NiE3xKIGTWW+pW4A9tPkqGCeac5gARHU=
-			</data>
-		</dict>
-		<key>Resources/interpreter.py</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			wbFoglTLztwttGELK/m9HY1dtdB6QQknSG0xaeyB7Cw=
 			</data>
 		</dict>
 		<key>Resources/jedi/third_party/django-stubs/LICENSE.txt</key>

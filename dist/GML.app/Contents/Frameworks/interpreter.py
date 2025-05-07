@@ -1,1 +1,0 @@
-../Resources/interpreter.py

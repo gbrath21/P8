@@ -4,8 +4,9 @@ import ply.lex as lex
 tokens = (
     'GRAPH', 'NODE', 'EDGE', 'COLOR', 'FIND', 'CYCLE', 'PATH',
     'VISUALIZE', 'IN', 'TO', 'ARROW', 'NUMBER', 'IDENTIFIER', 'STRING',
-    'DELETE1', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'IF', 'THEN',
-    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'BFS', 'DFS', 'ADD', 'OF', 'NOT', 'IS', 'GREATER', 'THAN'
+    'REMOVE', 'FROM', 'WEIGHT', 'DIRECTED', 'SAVE', 'LOAD', 'MST', 'IF', 'THEN',
+    'CLOSURE', 'REFLEXIVE', 'SYMMETRIC', 'TRANSITIVE', 'LOOP', 'BFS', 'DFS', 'ADD', 'OF', 'NOT', 'IS', 'GREATER', 'THAN',
+    'AND', 'OR'
 )
 
 # KEYWORDS
@@ -19,7 +20,7 @@ t_PATH = r'path'
 t_VISUALIZE = r'visualize'
 t_IN = r'in'
 t_TO = r'to'
-t_DELETE1 = r'delete1'
+t_REMOVE = r'remove'
 t_FROM = r'from'
 t_WEIGHT = r'weight'
 t_DIRECTED = r'directed'
@@ -41,6 +42,8 @@ t_NOT = r'not'
 t_IS = r'is'
 t_GREATER = r'greater'
 t_THAN = r'than'
+t_AND = r'and'
+t_OR = r'or'
 
 # SYMBOLS
 t_ARROW = r'->'
@@ -49,9 +52,9 @@ t_STRING = r'"[^"]*"'
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*' # Regular expression describing variable names (see SPO lec1)
     if t.value in {'graph', 'node', 'edge', 'color', 'find', 'cycle', 'path', 'visualize',
-                    'in', 'to', 'delete1', 'from', 'weight', 'directed', 'save', 'load',
+                    'in', 'to', 'remove', 'from', 'weight', 'directed', 'save', 'load',
                     'mst', 'shortest', 'if', 'then', 'closure', 'transitive', 'symmetric', 'reflexive',
-                    'loop', 'bfs', 'dfs', 'not', 'add', 'of', 'is', 'greater', 'than'}:
+                    'loop', 'bfs', 'dfs', 'not', 'add', 'of', 'is', 'greater', 'than', 'and', 'or'}:
         t.type = t.value.upper()  # Convert to token type
     return t
 
