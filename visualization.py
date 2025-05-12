@@ -119,7 +119,6 @@ def visualize_interactive(graph, graph_name, path=None, cycle=None, mst=None, cl
             fig.add_annotation(ax=x0, ay=y0, x=x1, y=y1, xref="x", yref="y", axref="x", ayref="y",
                                showarrow=True, arrowhead=4, arrowsize=3, arrowcolor="black")
 
-    # Forklaringer
     fig.add_annotation(
         xref="paper", yref="paper", x=0.5, y=-0.05, yanchor="top",
         text=("<span style='color:#4ad3ff; font-weight:bold;'>Blue</span>: Normal nodes & edges &nbsp;&nbsp;"
@@ -130,6 +129,31 @@ def visualize_interactive(graph, graph_name, path=None, cycle=None, mst=None, cl
               "<span style='color:magenta; font-weight:bold;'>Pink</span>: DFS"),
         showarrow=False, font=dict(size=12, color="black"), bgcolor="white", bordercolor="black", borderwidth=1
     )
+
+    algorithm_text = ""
+    if path is not None:
+        algorithm_text += f"<b>Shortest path:</b> {path}<br>"
+    if cycle is not None:
+        algorithm_text += f"<b>Cycle:</b> {cycle}<br>"
+    if mst is not None:
+        algorithm_text += f"<b>MST:</b> {list(mst)}<br>"
+    if bfs is not None:
+        algorithm_text += f"<b>BFS:</b> {bfs}<br>"
+    if dfs is not None:
+        algorithm_text += f"<b>DFS:</b> {dfs}<br>"
+
+    if algorithm_text:
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.98, y=0.98,
+            xanchor="right", yanchor="top",
+            text=algorithm_text,
+            showarrow=False,
+            bordercolor="#444",
+            borderwidth=2,
+            bgcolor="rgba(255,255,255,0.9)",
+            font=dict(family="Trebuchet MS", size=13, color="#333")
+        )
 
     fig.update_layout(title={"text": f"<span style='font-family:Trebuchet MS; font-size:22px;'>Visualization of Graph: {graph_name}</span>",
                               "x": 0.5, "xanchor": "center"},

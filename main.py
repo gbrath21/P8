@@ -2,6 +2,11 @@ import sys
 import tkinter as tk
 from gui import GML_GUI
 from interpreter import run_gml
+import os
+
+log_path = os.path.expanduser("~/Desktop/gml_app_log.txt")
+sys.stdout = open(log_path, "w")
+sys.stderr = sys.stdout
 
 def run_gml_file(filename):
     with open(filename, "r") as file:
