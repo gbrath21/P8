@@ -38,6 +38,7 @@ def visualize_interactive(graph, graph_name, path=None, cycle=None, mst=None, cl
 
     edge_x, edge_y, cycle_edge_x, cycle_edge_y, path_edge_x, path_edge_y = [], [], [], [], [], []
     closure_edge_x, closure_edge_y, bfs_edge_x, bfs_edge_y, dfs_edge_x, dfs_edge_y = [], [], [], [], [], []
+    mst_edge_x, mst_edge_y = [], []
     edge_labels = {}
 
     cycle_edges = set((u, v) for u, v, *_ in cycle) if cycle else set()
