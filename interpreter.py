@@ -315,83 +315,89 @@ def execute(ast):
                 print(f"Edge {u} -> {v} not found")
     
     # If statements 
-    elif command == 'if_expr':
+    elif command == 'if_cond':
         condition_ast, then_stmt = ast[1], ast[2]
-        if evaluate_condition(condition_ast, sigma=None):  # sigma kan bruges senere til fx miljø
+        result = evaluate_condition(condition_ast, sigma=None)
+        if result:
             execute(then_stmt)
-    
-    elif command == 'if_node':
-        node, graph_name, then_stmt = ast[1], ast[2], ast[3]
-        if graph_name in graph_store and node in graph_store[graph_name]:
-            execute(then_stmt)
-            
-    elif command == 'if_edge':
-        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
-        graph = graph_store.get(graph_name)
-        if graph and graph.has_edge(node1, node2):
-            execute(then_stmt)
-            
-    elif command == 'if_path':
-        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
-        graph = graph_store.get(graph_name)
-        if graph:
-            try:
-                nx.shortest_path(graph, source=node1, target=node2)
-                execute(then_stmt)
-            except nx.NetworkXNoPath:
-                pass
-    
-    elif command == 'if_cycle':
-        graph_name, then_stmt = ast[1], ast[2]
-        graph = graph_store.get(graph_name)
-        if graph:
-            try:
-                nx.find_cycle(graph, orientation='ignore')
-                execute(then_stmt)
-            except nx.NetworkXNoCycle:
-                pass
 
-    elif command == 'if_edge_weight':
-        node1, node2, threshold, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4], ast[5]
-        if graph_name in graph_store:
-            graph = graph_store[graph_name]
-            if graph.has_edge(node1, node2):
-                current_weight = graph[node1][node2].get("weight", 0)
-                if current_weight > threshold:
-                    execute(then_stmt)
-            else:
-                print(f"Error: Edge {node1} -> {node2} does not exist in {graph_name}")
-        else:
-            print(f"Error: Graph {graph_name} does not exist")
+    # elif command == 'if_expr':
+    #     condition_ast, then_stmt = ast[1], ast[2]
+    #     if evaluate_condition(condition_ast, sigma=None):  # sigma kan bruges senere til fx miljø
+    #         execute(then_stmt)
     
-    elif command == 'if_not_edge':
-        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
-        graph = graph_store.get(graph_name)
-        if graph and not graph.has_edge(node1, node2):
-            execute(then_stmt)
+    # elif command == 'if_node':
+    #     node, graph_name, then_stmt = ast[1], ast[2], ast[3]
+    #     if graph_name in graph_store and node in graph_store[graph_name]:
+    #         execute(then_stmt)
             
-    elif command == 'if_not_node':
-        node, graph_name, then_stmt = ast[1], ast[2], ast[3]
-        if graph_name in graph_store and node not in graph_store[graph_name]:
-            execute(then_stmt)
+    # elif command == 'if_edge':
+    #     node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+    #     graph = graph_store.get(graph_name)
+    #     if graph and graph.has_edge(node1, node2):
+    #         execute(then_stmt)
             
-    elif command == 'if_not_path':
-        node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
-        graph = graph_store.get(graph_name)
-        if graph:
-            try:
-                nx.shortest_path(graph, source=node1, target=node2)
-            except nx.NetworkXNoPath:
-                execute(then_stmt)
+    # elif command == 'if_path':
+    #     node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+    #     graph = graph_store.get(graph_name)
+    #     if graph:
+    #         try:
+    #             nx.shortest_path(graph, source=node1, target=node2)
+    #             execute(then_stmt)
+    #         except nx.NetworkXNoPath:
+    #             pass
     
-    elif command == 'if_not_cycle':
-        graph_name, then_stmt = ast[1], ast[2]
-        graph = graph_store.get(graph_name)
-        if graph:
-            try:
-                nx.find_cycle(graph, orientation='ignore')
-            except nx.NetworkXNoCycle:
-                execute(then_stmt)
+    # elif command == 'if_cycle':
+    #     graph_name, then_stmt = ast[1], ast[2]
+    #     graph = graph_store.get(graph_name)
+    #     if graph:
+    #         try:
+    #             nx.find_cycle(graph, orientation='ignore')
+    #             execute(then_stmt)
+    #         except nx.NetworkXNoCycle:
+    #             pass
+
+    # elif command == 'if_edge_weight':
+    #     node1, node2, threshold, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4], ast[5]
+    #     if graph_name in graph_store:
+    #         graph = graph_store[graph_name]
+    #         if graph.has_edge(node1, node2):
+    #             current_weight = graph[node1][node2].get("weight", 0)
+    #             if current_weight > threshold:
+    #                 execute(then_stmt)
+    #         else:
+    #             print(f"Error: Edge {node1} -> {node2} does not exist in {graph_name}")
+    #     else:
+    #         print(f"Error: Graph {graph_name} does not exist")
+    
+    # elif command == 'if_not_edge':
+    #     node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+    #     graph = graph_store.get(graph_name)
+    #     if graph and not graph.has_edge(node1, node2):
+    #         execute(then_stmt)
+            
+    # elif command == 'if_not_node':
+    #     node, graph_name, then_stmt = ast[1], ast[2], ast[3]
+    #     if graph_name in graph_store and node not in graph_store[graph_name]:
+    #         execute(then_stmt)
+            
+    # elif command == 'if_not_path':
+    #     node1, node2, graph_name, then_stmt = ast[1], ast[2], ast[3], ast[4]
+    #     graph = graph_store.get(graph_name)
+    #     if graph:
+    #         try:
+    #             nx.shortest_path(graph, source=node1, target=node2)
+    #         except nx.NetworkXNoPath:
+    #             execute(then_stmt)
+    
+    # elif command == 'if_not_cycle':
+    #     graph_name, then_stmt = ast[1], ast[2]
+    #     graph = graph_store.get(graph_name)
+    #     if graph:
+    #         try:
+    #             nx.find_cycle(graph, orientation='ignore')
+    #         except nx.NetworkXNoCycle:
+    #             execute(then_stmt)
     
     elif command == 'find_bfs':
         start_node, graph_name = ast[1], ast[2]
@@ -477,31 +483,36 @@ def run_gml(code):
             i += 1
             continue
 
-        # Find alle typer af loops
-        if line.strip().startswith("loop"):
-            loop_header = line
-            loop_indent = len(line) - len(line.lstrip())
+        stripped = line.strip()
+
+        # Find start på blok (loop eller if)
+        if stripped.startswith("loop") or stripped.startswith("if"):
+            block_header = line
+            block_indent = len(line) - len(stripped)
             block_lines = []
             i += 1
 
             while i < len(lines):
-                block_line = lines[i]
-                indent = len(block_line) - len(block_line.lstrip())
-                if not block_line.strip() or indent <= loop_indent:
-                    break
-                block_lines.append(block_line)
+                next_line = lines[i]
+                next_indent = len(next_line) - len(next_line.lstrip())
+
+                if not next_line.strip() or next_indent <= block_indent:
+                    break  # blokken slutter når indryk stopper
+                block_lines.append(next_line)
                 i += 1
 
-            full_block = loop_header + "\n" + "\n".join(block_lines)
+            full_block = block_header + "\n" + "\n".join(block_lines)
             try:
                 ast = parser.parse(full_block)
-                execute(ast)
+                if ast:
+                    execute(ast)
             except Exception as e:
-                print(f"Parse error in loop block: {e}")
+                print(f"Parse error in block: {e}")
         else:
             try:
-                ast = parser.parse(line.strip())
-                execute(ast)
+                ast = parser.parse(stripped)
+                if ast:
+                    execute(ast)
             except Exception as e:
                 print(f"Parse error: {e}")
             i += 1

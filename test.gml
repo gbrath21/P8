@@ -89,8 +89,10 @@ visualize G
 graph G
 node A in G
 node B in G
-node C in G
-if node A in G then delete1 node A from G
+
+if node A in G then
+    remove node A from G
+
 visualize G
 
 
