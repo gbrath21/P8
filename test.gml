@@ -198,3 +198,26 @@ edge C -> D in G
 edge D -> E in G
 find bfs from A in G
 visualize G
+
+graph G
+node A in G
+node B in G
+
+if node A in G and node B in G then
+    color node A "green"
+
+visualize G
+
+
+graph G
+node A in G
+
+if node A in G or node B in G then
+    color node A "blue"
+
+
+graph G
+node A in G
+
+if not node B in G then
+    color node A "red"
