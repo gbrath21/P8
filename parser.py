@@ -89,9 +89,9 @@ def p_condition_or(p):
     'condition : condition OR condition'
     p[0] = ('or', p[1], p[3])
 
-def p_statement_if_edge_weight(p):
-    '''statement : IF WEIGHT OF EDGE IDENTIFIER ARROW IDENTIFIER IS GREATER THAN NUMBER IN IDENTIFIER THEN statement'''
-    p[0] = ('if_edge_weight', p[5], p[7], p[11], p[13], p[15])
+def p_condition_edge_weight(p):
+    '''condition : WEIGHT OF EDGE IDENTIFIER ARROW IDENTIFIER IS GREATER THAN NUMBER IN IDENTIFIER'''
+    p[0] = ('cond', 'weight', p[4], p[6], p[10], p[12]) 
 
 def p_statement_closure(p):
     'statement : CLOSURE closure_type IN IDENTIFIER'

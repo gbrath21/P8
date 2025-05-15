@@ -56,6 +56,15 @@ def evaluate_condition(cond, sigma):
                         return True
                     except nx.NetworkXNoCycle:
                         return False
+                    
+        elif sub[0] == 'weight':
+            u, v, w, G = sub[1], sub[2], sub[3], sub[4]
+            if G in graph_store:
+                graph = graph_store[G]
+                if graph.has_edge(u, v):
+                    edge_weight = graph[u][v].get("weight", 1)
+                    return edge_weight > w
+            return False
 
         elif sub[0] == 'not':
             rest = sub[1:]
